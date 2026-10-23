@@ -579,9 +579,9 @@ export default function Home() {
               <div className="intake-line"><span>02</span><strong>Participantes + hardware</strong></div>
               <div className="intake-line"><span>03</span><strong>Volume + critérios de aceitação</strong></div>
               <Button asChild size="lg" className="primary-cta final-cta__button">
-                <a href="mailto:contato@operumdata.com?subject=Projeto%20de%20dados%20do%20mundo%20real">Discutir um projeto</a>
+                <a href="mailto:?subject=Projeto%20de%20dados%20do%20mundo%20real">Discutir um projeto</a>
               </Button>
-              <small>Contato experimental por e-mail · confirmar endereço antes da versão definitiva.</small>
+              <small>Versão experimental: destinatário de e-mail será definido antes do lançamento.</small>
             </div>
           </div>
         </section>
