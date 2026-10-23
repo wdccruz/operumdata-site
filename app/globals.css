@@ -2034,39 +2034,73 @@ a.lang-switch__item:hover { background: rgba(255, 255, 255, 0.06); color: var(--
 }
 
 /* ========================================================================== */
-/* Reduced motion: keep meaningful static states                              */
+/* Motion control                                                              */
 /* ========================================================================== */
 
+/* Manual pause (button under the hero visual), stored per visitor. */
+.motion-paused *,
+.motion-paused *::before,
+.motion-paused *::after { animation-play-state: paused !important; }
+
+.motion-toggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.motion-toggle:hover { border-color: var(--text-soft); color: var(--text); }
+.js .motion-toggle { display: inline-flex; }
+.motion-toggle__play { display: none; }
+.motion-paused .motion-toggle__play { display: inline; }
+.motion-paused .motion-toggle__pause { display: none; }
+
+.visual-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-top: 12px;
+}
+
+.visual-footer .visual-caption { margin-top: 0; }
+
+/*
+ * Reduced motion. Windows turns this on whenever "Animation effects" is off,
+ * which is common on work laptops, so a hard stop made the site look broken.
+ * Instead we keep the explanatory loops (they carry the message) in a calmer
+ * form and drop the purely decorative, large or continuous movement.
+ * Visitors who want no motion at all can use the pause button.
+ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    animation-delay: 0s !important;
-    transition-duration: 0.001ms !important;
-  }
-  .js .reveal { opacity: 1; transform: none; }
-  .ticker { mask-image: none; -webkit-mask-image: none; }
-  .ticker__list { animation: none !important; flex-wrap: wrap; }
-  .ticker__list[aria-hidden] { display: none; }
-  .ticker { justify-content: center; }
-  .hs-stream__pulse { stroke-dasharray: none; stroke-dashoffset: 0; opacity: 0.6; animation: none !important; }
-  .hs-scan { display: none; }
-  .hs-model rect:nth-child(3n) { fill: rgba(255, 90, 31, 0.45); }
-  .hero-stages li { animation: none !important; color: var(--text-soft); }
-  .hero-stages li::after { animation: none !important; transform: scaleX(1); opacity: 0.35; }
-  .net-path { animation: none !important; opacity: 0; }
-  .net-path--0 { opacity: 1; }
-  .net-path path { animation: none !important; stroke-dashoffset: 0; }
-  .net-readout__value { animation: none !important; }
-  .net-readout__value--0 { opacity: 1; }
-  .method__rail::after { animation: none !important; transform: none; }
-  .method__token { animation: none !important; left: 50%; top: 50%; }
-  .custody__token,
-  .timeline::after,
-  .bridge__link i,
-  .control-row::before,
-  .network-steps li::after { display: none; }
+  .js .reveal { transform: none; transition: opacity 600ms ease; }
+  .hero__content > *,
+  .hero-system,
+  .hero h1 em::after { animation: none; }
   .hero__grid-floor,
-  .hero__beam { animation: none !important; }
+  .hero__beam,
+  .hs-orbit,
+  .net-rings,
+  .net-sweep { animation: none; }
+  .ticker__list { animation-duration: 120s; }
+  .hs-arm-upper,
+  .hs-arm-fore,
+  .hs-robot-link1,
+  .hs-robot-link2 { animation-duration: 4.8s; }
+  .hs-stream__pulse { animation-duration: 3s; }
+  .rw-link__flow { animation-duration: 3s; }
+  .bridge__link i { animation-duration: 4.2s; }
 }

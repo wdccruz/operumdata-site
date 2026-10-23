@@ -214,7 +214,13 @@ export function HeroSystem({ t }: { t: SiteContent["hero"] }) {
           ))}
         </ol>
       </div>
-      <figcaption className="visual-caption">{t.caption}</figcaption>
+      <div className="visual-footer">
+        <figcaption className="visual-caption">{t.caption}</figcaption>
+        <button className="motion-toggle" type="button" data-motion-toggle aria-pressed="false">
+          <span className="motion-toggle__pause"><span aria-hidden="true">❚❚ </span>{t.pause}</span>
+          <span className="motion-toggle__play"><span aria-hidden="true">▶ </span>{t.play}</span>
+        </button>
+      </div>
     </figure>
   );
 }

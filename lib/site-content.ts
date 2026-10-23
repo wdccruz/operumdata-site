@@ -52,6 +52,8 @@ const en = {
     tags: { pose: "POSE", hands: "HAND + OBJECT", tool: "TOOL USE", capture: "FIELD CAPTURE", data: "DATA", model: "MODEL", policy: "LEARNED MOTION" },
     stages: ["Human", "Field task", "Capture", "Data", "Model", "Robot"],
     caption: "Concept illustration · not footage or data from a completed operation.",
+    pause: "Pause animations",
+    play: "Play animations",
   },
   ticker: [
     "Present operations → Future intelligence",
@@ -290,6 +292,8 @@ const pt: SiteContent = {
     tags: { pose: "POSE", hands: "MÃO + OBJETO", tool: "USO DE FERRAMENTA", capture: "CAPTURA EM CAMPO", data: "DADOS", model: "MODELO", policy: "MOVIMENTO APRENDIDO" },
     stages: ["Humano", "Tarefa de campo", "Captura", "Dados", "Modelo", "Robô"],
     caption: "Ilustração conceitual · não representa gravações ou dados de uma operação realizada.",
+    pause: "Pausar animações",
+    play: "Retomar animações",
   },
   ticker: [
     "Operações presentes → Inteligência futura",

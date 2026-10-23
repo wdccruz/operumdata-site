@@ -74,6 +74,23 @@ const script = `
     if (summary) summary.focus();
   });
 
+  var STORE = "operum-motion";
+  var paused = false;
+  try { paused = window.localStorage.getItem(STORE) === "paused"; } catch (e) { paused = false; }
+  var toggles = d.querySelectorAll("[data-motion-toggle]");
+  function applyMotion() {
+    root.classList.toggle("motion-paused", paused);
+    toggles.forEach(function (btn) { btn.setAttribute("aria-pressed", paused ? "true" : "false"); });
+  }
+  applyMotion();
+  toggles.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      paused = !paused;
+      try { window.localStorage.setItem(STORE, paused ? "paused" : "playing"); } catch (e) { /* storage unavailable */ }
+      applyMotion();
+    });
+  });
+
   var matrix = d.querySelector("[data-rw]");
   if (matrix) {
     var rows = matrix.querySelectorAll("[data-env-row]");
@@ -89,13 +106,11 @@ const script = `
       row.addEventListener("mouseleave", function () { hovering = false; });
     });
     setFocus(0);
-    if (!reduce) {
-      window.setInterval(function () {
-        if (hovering || !matrix.classList.contains("is-playing")) return;
+    window.setInterval(function () {
+        if (paused || hovering || !matrix.classList.contains("is-playing")) return;
         current = (current + 1) % rows.length;
         setFocus(current);
-      }, 2600);
-    }
+      }, reduce ? 4200 : 2600);
   }
 })();
 `;
