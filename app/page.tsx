@@ -232,12 +232,11 @@ export default function Home() {
                 <span className="signal-dot" aria-hidden="true" />
                 Dados do mundo real · Physical AI · Brasil
               </div>
-              <h1 id="hero-title">
-                Coleta de dados do mundo real e operações de campo no Brasil para Physical AI e robótica.
-              </h1>
+              <h1 id="hero-title">O mundo físico.<br/><em>Dados para a próxima geração de IA.</em></h1>
               <p className="hero__lead">
-                Transformamos protocolos de coleta em operações de campo, coordenando ambientes reais de trabalho, participantes, autorizações, hardware e execução local.
+                Da identificação de empresas, ambientes e profissionais à preparação de pilotos, estruturamos as condições para executar projetos de coleta de dados do mundo real no Brasil.
               </p>
+              <div className="hero__proof"><span>REAL-WORLD DATA</span><span>FIELD NETWORK / BRAZIL</span><span>PILOT-FIRST</span></div>
               <div className="hero__actions">
                 <Button asChild size="lg" className="primary-cta">
                   <a href="#contato">Discutir um projeto</a>
@@ -288,11 +287,12 @@ export default function Home() {
                   <span>OUTPUT / FIELD EXECUTION</span>
                 </div>
               </div>
-              <p className="console-caption">Representação conceitual do processo operacional.</p>
+              <p className="console-caption">Modelo conceitual · não representa gravações já realizadas.</p>
             </div>
           </div>
         </section>
 
+        <div className="editorial-strip"><div className="shell editorial-strip__inner"><span>01 / ESTRUTURAR</span><span>02 / QUALIFICAR</span><span>03 / VALIDAR</span><span>04 / OPERAR</span><strong>BRASIL → PHYSICAL AI</strong></div></div>
         <section className="section" id="operacao">
           <div className="shell">
             <SectionHeading
@@ -379,6 +379,7 @@ export default function Home() {
               description="Cada protocolo exige uma combinação específica de ambiente, atividade, participante, segurança, autorização e condições de captura."
             />
 
+            <div className="field-visual reveal" role="img" aria-label="Imagem ilustrativa de ambiente de trabalho industrial"><div className="field-visual__overlay"><span>REAL WORK / REAL ENVIRONMENTS</span><strong>O campo não é uma simulação.</strong><small>Imagem ilustrativa · não representa uma operação da OperumData</small></div></div>
             <div className="environment-grid">
               {environments.map((environment) => (
                 <article className="environment-card reveal" key={environment.code}>
@@ -532,7 +533,7 @@ export default function Home() {
                 <span>FIELD EXPERIENCE</span>
               </div>
               <h2>Uma nova marca apoiada por experiência operacional real.</h2>
-              <p>A OperumData nasce da experiência de seu fundador na coordenação de operações de campo desde 2015.</p>
+              <p>A OperumData nasce da experiência de seu fundador na coordenação de serviços técnicos e operações de campo desde 2015. Essa trajetória não representa experiência anterior em gravações de dados para IA.</p>
               <p>
                 Essa trajetória inclui gestão de equipes, fornecedores e profissionais terceirizados, compras técnicas, cronogramas, logística e execução em ambientes reais de trabalho.
               </p>
@@ -578,9 +579,9 @@ export default function Home() {
               <div className="intake-line"><span>02</span><strong>Participantes + hardware</strong></div>
               <div className="intake-line"><span>03</span><strong>Volume + critérios de aceitação</strong></div>
               <Button asChild size="lg" className="primary-cta final-cta__button">
-                <a href="#top">Discutir um projeto</a>
+                <a href="mailto:?subject=Projeto%20de%20dados%20do%20mundo%20real">Discutir um projeto</a>
               </Button>
-              <small>Destino comercial será conectado antes da publicação.</small>
+              <small>Versão experimental: destinatário de e-mail será definido antes do lançamento.</small>
             </div>
           </div>
         </section>
