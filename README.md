@@ -1,50 +1,61 @@
-# OperumData — landing page institucional
+# OperumData — institutional site
 
-Versão 2 visual, em português, da landing page B2B da OperumData.
+Bilingual landing page for OperumData: field operations in Brazil for
+real-world data, robotics and Physical AI.
 
-## Direção
+- English (primary): `/` → https://wdccruz.github.io/operumdata-site/
+- Portuguese: `/pt/` → https://wdccruz.github.io/operumdata-site/pt/
 
-- Data-Driven Brutalism / Terminal / DevTool com linguagem industrial
-- base preto profundo, off-white e signal orange `#FF5A1F`
-- tipografia local de display e mono técnica, sem dependência de fontes externas
-- narrativa de uma única página
-- pipeline operacional animado como elemento principal do Hero
-- animações funcionais na rede, método, controle e fluxo de hardware
-- sem métricas, clientes, certificações ou capacidades não validadas
-- sem imagens genéricas
-- responsiva para desktop e celular
-- animações CSS com suporte a `prefers-reduced-motion`
+## Direction
 
-## Estrutura principal
+- dark industrial-tech, editorial and futurist, grounded in the physical world
+- deep black, off-white, cool greys and signal orange `#FF5A1F`
+- local display and mono typefaces, no external fonts or images
+- animations tied to the business: human work → field capture → data → model → robot,
+  the now/future operating bridge, a living field network and the pilot-first method
+- all animation is CSS/SVG, pauses off-screen and respects `prefers-reduced-motion`
+- no invented clients, metrics, completed operations or coverage claims;
+  every visual model is labelled as a concept
+
+## Structure
 
 ```text
 app/
-  layout.tsx       metadados, idioma e favicon
-  page.tsx         conteúdo e componentes da landing page
-  globals.css      sistema visual, layouts e responsividade
-components/ui/
-  accordion.tsx    FAQ acessível
-  button.tsx       CTAs
-public/
-  favicon.svg      ícone da OperumData
-  fonts/           fontes locais usadas pela V2
+  layout.tsx            metadata (English) and global CSS
+  page.tsx              English route (/)
+  pt/page.tsx           Portuguese route (/pt)
+  globals.css           visual system, animations, responsive and reduced-motion rules
+components/site/
+  home-page.tsx         the full page, rendered per language
+  visuals.tsx           hero system, bridge, service glyphs, real-work links, field network
+  site-script.tsx       small progressive-enhancement script (reveal, nav state, matrix)
+lib/site-content.ts     all copy in EN and PT, plus CONTACT_EMAIL
+scripts/export-pages.tsx  static export to docs/ (index.html + pt/index.html)
+scripts/check-pages.mjs   checks the export: both languages, anchors, assets, switcher
 ```
 
-## Executar localmente
+## Run locally
 
-Requisitos: Node.js 22.13 ou superior e pnpm.
+Requirements: Node.js 22.13+ and pnpm.
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-## Validar o build
+## Build and publish
 
 ```bash
-pnpm build
+pnpm lint
+pnpm export:pages   # builds and writes docs/
+pnpm check:pages    # verifies docs/
 ```
 
-## Pendente antes da publicação
+Pushing to `main` runs `.github/workflows/pages.yml`, which lints, exports,
+checks and deploys `docs/` to GitHub Pages.
 
-O destino externo dos botões “Discutir um projeto” deve ser conectado após a definição do e-mail, formulário ou agenda comercial. Nenhum domínio ou publicação foi configurado nesta versão.
+## Pending before commercial launch
+
+Set `CONTACT_EMAIL` in `lib/site-content.ts` once a commercial inbox exists.
+Until then the contact buttons open a pre-filled brief with a blank recipient
+and the page says so openly.

@@ -34,12 +34,12 @@ jobs:
         run: pnpm lint
       - name: Build and export static Pages
         run: pnpm export:pages
-      - name: Verify exported files
+      - name: Verify exported files (EN + PT, anchors, assets, language switcher)
         run: |
           test -s docs/index.html
+          test -s docs/pt/index.html
           test -s docs/assets/site.css
-          grep -q 'O mundo físico' docs/index.html
-          grep -q 'ff5a1f' docs/assets/site.css
+          pnpm check:pages
       - uses: actions/upload-artifact@v4
         with:
           name: operumdata-pages

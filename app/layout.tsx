@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { content } from "@/lib/site-content";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "OperumData | Operações de campo para Physical AI no Brasil",
-  description:
-    "Coleta de dados do mundo real e operações de campo no Brasil para Physical AI e robótica.",
+  title: content.en.meta.title,
+  description: content.en.meta.description,
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
