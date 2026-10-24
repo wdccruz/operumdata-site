@@ -6,8 +6,8 @@ import path from "node:path";
 
 const docs = path.join(process.cwd(), "docs");
 const pages = [
-  { file: "index.html", lang: "en", mustContain: ["We turn the physical world into", "field operations", "Discuss your Brazil field data project", "Send your project brief"] },
-  { file: "pt/index.html", lang: "pt-BR", mustContain: ["Transformamos o mundo físico em", "operações de campo", "Enviar o briefing do projeto"] },
+  { file: "index.html", lang: "en", mustContain: ["Real-World Data Collection.", "Field Operations", "Discuss your Brazil field data project", "Send your project brief"] },
+  { file: "pt/index.html", lang: "pt-BR", mustContain: ["Coleta de Dados do Mundo Real.", "Operações de Campo", "Enviar o briefing do projeto"] },
 ];
 
 const failures = [];

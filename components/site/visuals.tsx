@@ -2,188 +2,169 @@ import type { CSSProperties } from "react";
 import type { SiteContent } from "@/lib/site-content";
 
 /* -------------------------------------------------------------------------- */
-/* Hero: OperumData coordination layer                                         */
-/* Client requirements -> coordination core -> local network -> execution,     */
-/* closing the loop back into the client's Physical AI / robotics program.     */
+/* Hero background: an atmospheric coordination network                       */
+/* OperumData sits at the core; typed hubs (protocol, companies, worksites,    */
+/* professionals, hardware, execution) branch into satellites, with a dim far  */
+/* layer for depth. Generated deterministically at build time.                 */
 /* -------------------------------------------------------------------------- */
 
-const delay = (s: number): CSSProperties => ({ animationDelay: `${s}s` });
+type P = { x: number; y: number };
+type Link = { a: P; b: P; d: string; kind: "core" | "hub" | "mesh" | "far" };
 
-const REQ_TOPS = [130, 220, 310];
-const GROUP_Y = [140, 216, 292, 368];
-
-const TRACES = {
-  loop: "M105 440 V360",
-  req: ["M170 155 H214 V238 H270", "M170 245 H230 V258 H270", "M170 335 H214 V278 H270"],
-  core: ["M390 218 H426 V140 H462", "M390 246 H442 V216 H462", "M390 270 H442 V292 H462", "M390 298 H426 V368 H462"],
-  exec: ["M580 140 H616 V236 H646", "M580 216 H602 V250 H646", "M580 292 H602 V266 H646", "M580 368 H616 V280 H646"],
-  out: "M676 288 V440",
-};
-
-// Timeline of one 8 s cycle (seconds).
-const T = {
-  loop: 0,
-  cards: 0.9,
-  req: [0.6, 0.8, 1.0],
-  core: 1.9,
-  coreOut: [2.2, 2.35, 2.5, 2.65],
-  group: 3.3,
-  execIn: [4.2, 4.35, 4.5, 4.65],
-  exec: 5.5,
-  out: 5.8,
-  band: 7.0,
-};
-
-function Pulse({ d, at }: { d: string; at: number }) {
-  return (
-    <>
-      <path className="cm-rail" d={d} />
-      <path className="cm-pulse" d={d} pathLength="100" style={delay(at)} />
-    </>
-  );
+function prng(seed: number) {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
-export function HeroSystem({ t }: { t: SiteContent["hero"] }) {
+const r1 = (n: number) => Math.round(n * 10) / 10;
+const dist = (a: P, b: P) => Math.hypot(a.x - b.x, a.y - b.y);
+
+function curve(a: P, b: P, bend: number) {
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2;
+  const len = dist(a, b) || 1;
+  const nx = -(b.y - a.y) / len;
+  const ny = (b.x - a.x) / len;
+  return `M${r1(a.x)} ${r1(a.y)} Q${r1(mx + nx * len * bend)} ${r1(my + ny * len * bend)} ${r1(b.x)} ${r1(b.y)}`;
+}
+
+function buildNetwork() {
+  const rand = prng(20261024);
+  const core: P = { x: 1160, y: 430 };
+  const hubAngles = [-150, -92, -32, 28, 88, 150];
+  const hubs: P[] = hubAngles.map((deg) => {
+    const a = ((deg + (rand() - 0.5) * 16) * Math.PI) / 180;
+    const r = 235 + rand() * 60;
+    return { x: core.x + Math.cos(a) * r * 1.3, y: core.y + Math.sin(a) * r * 0.82 };
+  });
+  const sats: { p: P; hub: number }[] = [];
+  hubs.forEach((h, hi) => {
+    for (let i = 0; i < 5; i++) {
+      const a = ((hubAngles[hi] + (rand() - 0.5) * 150) * Math.PI) / 180;
+      const r = 80 + rand() * 105;
+      sats.push({ p: { x: h.x + Math.cos(a) * r * 1.2, y: h.y + Math.sin(a) * r * 0.85 }, hub: hi });
+    }
+  });
+  const far: P[] = [];
+  let guard = 0;
+  while (far.length < 34 && guard++ < 2000) {
+    const p = { x: 420 + 1200 * Math.sqrt(rand()), y: 30 + rand() * 840 };
+    if ([core, ...hubs, ...sats.map((s) => s.p), ...far].every((q) => dist(p, q) > 70)) far.push(p);
+  }
+
+  const links: Link[] = [];
+  const add = (a: P, b: P, kind: Link["kind"]) => links.push({ a, b, kind, d: curve(a, b, (rand() - 0.5) * 0.3) });
+  hubs.forEach((h) => add(core, h, "core"));
+  sats.forEach((s) => add(hubs[s.hub], s.p, "hub"));
+  sats.forEach((s, i) => {
+    let best = -1;
+    let bd = 210;
+    sats.forEach((o, j) => {
+      if (o.hub !== s.hub && j > i && dist(s.p, o.p) < bd) {
+        bd = dist(s.p, o.p);
+        best = j;
+      }
+    });
+    if (best >= 0) add(s.p, sats[best].p, "mesh");
+  });
+  const pool = [...far, ...sats.map((s) => s.p)];
+  far.forEach((p) => {
+    pool
+      .filter((q) => q !== p)
+      .map((q) => ({ q, dd: dist(p, q) }))
+      .sort((m, n) => m.dd - n.dd)
+      .slice(0, 2)
+      .forEach(({ q, dd }) => dd < 240 && add(p, q, "far"));
+  });
+
+  return { core, hubs, sats, far, links };
+}
+
+const NET = buildNetwork();
+
+const anim = (dur: number, delay: number): CSSProperties =>
+  ({ ["--dur" as string]: `${dur}s`, ["--delay" as string]: `${delay}s` }) as CSSProperties;
+
+export function HeroBackground({ t }: { t: SiteContent["hero"] }) {
+  const { core, hubs, sats, far, links } = NET;
+  const rand = prng(7);
+  const coreLinks = links.filter((l) => l.kind === "core");
+  const hubLinks = links.filter((l) => l.kind === "hub");
+  const pulseHub = hubLinks.filter((_, i) => i % 3 === 0);
+
   return (
-    <figure className="hero-system">
-      <div className="hero-system__frame" data-anim>
-        <div className="hero-system__bar" aria-hidden="true">
-          <span>
-            <span className="signal-dot" />
-            {t.frameTitle}
-          </span>
-          <span>{t.frameMode} · BR</span>
-        </div>
+    <div className="hero-bg" data-anim aria-hidden="true">
+      <svg className="hero-bg__svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <defs>
+          <radialGradient id="hb-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ff5a1f" stopOpacity="0.28" />
+            <stop offset="45%" stopColor="#ff5a1f" stopOpacity="0.06" />
+            <stop offset="100%" stopColor="#ff5a1f" stopOpacity="0" />
+          </radialGradient>
+        </defs>
 
-        <svg className="hero-svg" viewBox="0 0 760 500" role="img" aria-label={t.visualLabel}>
-          <defs>
-            <pattern id="cm-dots" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="0.9" />
-            </pattern>
-            <radialGradient id="cm-core-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ff5a1f" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#ff5a1f" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-
-          <rect className="cm-dots" x="0" y="0" width="760" height="500" fill="url(#cm-dots)" />
-
-          {/* column headings */}
-          <g className="cm-heads">
-            <text x="40" y="70">{t.cols.req}</text>
-            <text x="330" y="70" textAnchor="middle">{t.cols.core}</text>
-            <text x="470" y="70">{t.cols.net}</text>
-            <text x="676" y="70" textAnchor="middle">{t.cols.exec}</text>
-          </g>
-          <g className="cm-rules">
-            <line x1="40" x2="170" y1="84" y2="84" />
-            <line x1="270" x2="390" y1="84" y2="84" />
-            <line x1="470" x2="600" y1="84" y2="84" />
-            <line x1="640" x2="712" y1="84" y2="84" />
-          </g>
-
-          {/* traces + pulses */}
-          <g className="cm-traces">
-            <Pulse d={TRACES.loop} at={T.loop} />
-            {TRACES.req.map((d, i) => <Pulse key={d} d={d} at={T.req[i]} />)}
-            {TRACES.core.map((d, i) => <Pulse key={d} d={d} at={T.coreOut[i]} />)}
-            {TRACES.exec.map((d, i) => <Pulse key={d} d={d} at={T.execIn[i]} />)}
-            <Pulse d={TRACES.out} at={T.out} />
-          </g>
-
-          {/* client requirement cards */}
-          {t.reqs.map((req, i) => {
-            const y = REQ_TOPS[i];
-            return (
-              <g className="cm-card" key={req.title} style={delay(T.cards + i * 0.1)}>
-                <rect x="40" y={y} width="130" height="50" />
-                <text className="cm-card__title" x="52" y={y + 22}>{req.title}</text>
-                <text className="cm-card__sub" x="52" y={y + 38}>{req.sub}</text>
-                <rect className="cm-port" x="167" y={y + 22} width="6" height="6" />
-              </g>
-            );
-          })}
-
-          {/* coordination core */}
-          <circle cx="330" cy="258" r="96" fill="url(#cm-core-glow)" className="cm-core-glow" />
-          <g className="cm-core" style={delay(T.core)}>
-            <rect className="cm-core__frame" x="270" y="198" width="120" height="120" />
-            <path className="cm-core__corners" d="M262 206 V190 H278 M382 190 H398 V206 M398 310 V326 H382 M278 326 H262 V310" />
-            <circle className="cm-core__ring" cx="330" cy="258" r="48" />
-            <circle className="cm-core__ring2" cx="330" cy="258" r="38" />
-            <circle className="cm-core__flash" cx="330" cy="258" r="48" style={delay(T.core)} />
-            <text className="cm-core__title" x="330" y="261" textAnchor="middle">{t.coreTitle}</text>
-            <text className="cm-core__sub" x="330" y="345" textAnchor="middle">{t.coreSub}</text>
-            {[238, 258, 278].map((y) => <rect key={`l${y}`} className="cm-port" x="267" y={y - 3} width="6" height="6" />)}
-            {[218, 246, 270, 298].map((y) => <rect key={`r${y}`} className="cm-port" x="387" y={y - 3} width="6" height="6" />)}
-          </g>
-
-          {/* local network groups */}
-          {t.groups.map((group, g) => {
-            const y = GROUP_Y[g];
-            return (
-              <g className="cm-group" key={group}>
-                <text className="cm-group__label" x="470" y={y - 13}>{group}</text>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <rect
-                    key={i}
-                    className="cm-node"
-                    x={470 + i * 22}
-                    y={y - 5}
-                    width="10"
-                    height="10"
-                    style={delay(T.group + g * 0.15 + i * 0.09)}
-                  />
-                ))}
-                <line className="cm-group__bus" x1="470" x2="568" y1={y + 10} y2={y + 10} />
-                <rect className="cm-port" x="459" y={y - 3} width="6" height="6" />
-                <rect className="cm-port" x="577" y={y - 3} width="6" height="6" />
-              </g>
-            );
-          })}
-
-          {/* field execution */}
-          <g className="cm-exec" style={delay(T.exec)}>
-            <rect className="cm-exec__frame" x="646" y="228" width="60" height="60" />
-            {Array.from({ length: 9 }).map((_, i) => (
-              <rect
-                key={i}
-                className="cm-exec__cell"
-                x={656 + (i % 3) * 15}
-                y={238 + Math.floor(i / 3) * 15}
-                width="9"
-                height="9"
-                style={delay(T.exec + ((i * 4) % 9) * 0.06)}
-              />
-            ))}
-            <text className="cm-exec__label" x="676" y="310" textAnchor="middle">{t.execLabel}</text>
-          </g>
-
-          {/* client program band (closes the loop) */}
-          <g className="cm-band" style={delay(T.band)}>
-            <rect x="40" y="440" width="680" height="44" />
-            <text className="cm-band__left" x="128" y="467">→ {t.band}</text>
-            <text className="cm-band__right" x="704" y="467" textAnchor="end">{t.bandRight}</text>
-          </g>
-        </svg>
-
-        <ol className="hero-stages">
-          {t.stages.map((stage, i) => (
-            <li key={stage} style={delay(i * 2)}>
-              <span>{String(i + 1).padStart(2, "0")}</span>
-              {stage}
-            </li>
+        {/* far layer: depth */}
+        <g className="hb-layer hb-layer--far">
+          {links.filter((l) => l.kind === "far").map((l) => (
+            <path key={l.d} className="hb-link hb-link--far" d={l.d} />
           ))}
-        </ol>
-      </div>
-      <div className="visual-footer">
-        <figcaption className="visual-caption">{t.caption}</figcaption>
-        <button className="motion-toggle" type="button" data-motion-toggle aria-pressed="false">
-          <span className="motion-toggle__pause"><span aria-hidden="true">❚❚ </span>{t.pause}</span>
-          <span className="motion-toggle__play"><span aria-hidden="true">▶ </span>{t.play}</span>
-        </button>
-      </div>
-    </figure>
+          {far.map((p, i) => (
+            <circle key={i} className="hb-node hb-node--far" cx={r1(p.x)} cy={r1(p.y)} r="1.6" style={anim(7 + rand() * 6, -rand() * 12)} />
+          ))}
+          {[
+            [560, 140], [760, 780], [1480, 120], [1520, 760], [880, 90], [1300, 840],
+          ].map(([x, y]) => (
+            <path key={`${x}-${y}`} className="hb-tick" d={`M${x - 6} ${y} H${x + 6} M${x} ${y - 6} V${y + 6}`} />
+          ))}
+        </g>
+
+        {/* mid layer: satellites and mesh */}
+        <g className="hb-layer hb-layer--mid">
+          {links.filter((l) => l.kind === "mesh").map((l) => (
+            <path key={l.d} className="hb-link hb-link--mesh" d={l.d} />
+          ))}
+          {hubLinks.map((l) => (
+            <path key={l.d} className="hb-link hb-link--hub" d={l.d} style={anim(8 + rand() * 7, -rand() * 14)} />
+          ))}
+          {sats.map((s, i) => (
+            <circle key={i} className="hb-node hb-node--sat" cx={r1(s.p.x)} cy={r1(s.p.y)} r="2.3" style={anim(6 + rand() * 6, -rand() * 12)} />
+          ))}
+          {pulseHub.map((l, i) => (
+            <path key={`p${i}`} className="hb-pulse hb-pulse--small" d={l.d} pathLength="100" style={anim(9 + rand() * 9, -rand() * 18)} />
+          ))}
+        </g>
+
+        {/* near layer: core and hubs */}
+        <g className="hb-layer hb-layer--near">
+          <circle className="hb-core-glow" cx={core.x} cy={core.y} r="220" fill="url(#hb-core)" />
+          {coreLinks.map((l) => (
+            <path key={l.d} className="hb-link hb-link--core" d={l.d} style={anim(9 + rand() * 6, -rand() * 15)} />
+          ))}
+          {coreLinks.map((l, i) => (
+            <path key={`cp${i}`} className="hb-pulse" d={l.d} pathLength="100" style={anim(10 + i * 1.7, -rand() * 16)} />
+          ))}
+          {hubs.map((h, i) => (
+            <g key={i} className="hb-hub" style={anim(8 + rand() * 5, -rand() * 12)}>
+              <circle className="hb-hub__halo" cx={r1(h.x)} cy={r1(h.y)} r="11" />
+              <circle className="hb-hub__dot" cx={r1(h.x)} cy={r1(h.y)} r="3.4" />
+              <text className="hb-label" x={r1(h.x + 18)} y={r1(h.y - 14)}>{t.nodeLabels[i]}</text>
+            </g>
+          ))}
+          <g className="hb-core">
+            <circle className="hb-core__orbit" cx={core.x} cy={core.y} r="64" />
+            <circle className="hb-core__ring" cx={core.x} cy={core.y} r="30" />
+            <circle className="hb-core__dot" cx={core.x} cy={core.y} r="6" />
+            <text className="hb-label hb-label--core" x={core.x} y={core.y + 96} textAnchor="middle">OPERUMDATA</text>
+          </g>
+        </g>
+      </svg>
+    </div>
   );
 }
 

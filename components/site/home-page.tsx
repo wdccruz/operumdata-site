@@ -1,6 +1,6 @@
 import { CONTACT_EMAIL, content, langHref, type Lang } from "@/lib/site-content";
 import { SiteScript } from "./site-script";
-import { Bridge, FieldNetwork, HeroSystem, RealWorkLinks, ServiceGlyph } from "./visuals";
+import { Bridge, FieldNetwork, HeroBackground, RealWorkLinks, ServiceGlyph } from "./visuals";
 
 function SectionHeading({
   index,
@@ -160,27 +160,29 @@ export default function HomePage({ lang }: { lang: Lang }) {
       <main id="content">
         {/* ------------------------------------------------------------ HERO */}
         <section className="hero" aria-labelledby="hero-title">
-          <div className="hero__backdrop" aria-hidden="true">
-            <span className="hero__beam" />
-            <span className="hero__grid-floor" />
-          </div>
-          <div className="shell hero__grid">
+          <HeroBackground t={t.hero} />
+          <div className="hero__shade" aria-hidden="true" />
+          <div className="shell hero__inner">
             <div className="hero__content">
               <div className="eyebrow">
                 <span className="signal-dot" aria-hidden="true" />
                 {t.hero.eyebrow}
               </div>
               <h1 id="hero-title">
-                {t.hero.titleA} <em>{t.hero.titleEm}</em> {t.hero.titleB}
+                <span className="hero__line">{t.hero.titleLine1}</span>
+                <span className="hero__line hero__line--second">
+                  {t.hero.titleLine2} <em>{t.hero.titleAccent}</em>
+                </span>
               </h1>
               <p className="hero__lead">{t.hero.lead}</p>
               <div className="hero__actions">
-                <a className="btn btn--primary" href="#contact">
+                <a className="btn btn--primary btn--lg" href="#contact">
                   {t.hero.primary}
                   <span aria-hidden="true" className="btn__arrow">→</span>
                 </a>
-                <a className="btn btn--ghost" href="#method">
+                <a className="btn-link" href="#method">
                   {t.hero.secondary}
+                  <span aria-hidden="true">→</span>
                 </a>
               </div>
               <ul className="hero__principles" aria-label={t.hero.principlesLabel}>
@@ -189,7 +191,13 @@ export default function HomePage({ lang }: { lang: Lang }) {
                 ))}
               </ul>
             </div>
-            <HeroSystem t={t.hero} />
+          </div>
+          <div className="shell hero__meta">
+            <span className="hero__caption">{t.hero.caption}</span>
+            <button className="motion-toggle" type="button" data-motion-toggle aria-pressed="false">
+              <span className="motion-toggle__pause"><span aria-hidden="true">❚❚ </span>{t.hero.pause}</span>
+              <span className="motion-toggle__play"><span aria-hidden="true">▶ </span>{t.hero.play}</span>
+            </button>
           </div>
         </section>
 
