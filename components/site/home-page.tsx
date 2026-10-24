@@ -169,7 +169,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
                 {t.hero.eyebrow}
               </div>
               <h1 id="hero-title">
-                <span className="hero__line">{t.hero.titleLine1}</span>
+                <span className="hero__line">{t.hero.titleLine1}</span>{" "}
                 <span className="hero__line hero__line--second">
                   {t.hero.titleLine2} <em>{t.hero.titleAccent}</em>
                 </span>
