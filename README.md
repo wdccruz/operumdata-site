@@ -11,8 +11,8 @@ real-world data, robotics and Physical AI.
 - dark industrial-tech, editorial and futurist, grounded in the physical world
 - deep black, off-white, cool greys and signal orange `#FF5A1F`
 - local display and mono typefaces, no external fonts or images
-- animations tied to the business: human work → field capture → data → model → robot,
-  the now/future operating bridge, a living field network and the pilot-first method
+- animations tied to the business: the hero coordination layer (requirements → OperumData → local network → execution),
+  the requirements → execution bridge, a living field network and the pilot-first method
 - all animation is CSS/SVG, pauses off-screen and respects `prefers-reduced-motion`
 - no invented clients, metrics, completed operations or coverage claims;
   every visual model is labelled as a concept
@@ -27,7 +27,7 @@ app/
   globals.css           visual system, animations, responsive and reduced-motion rules
 components/site/
   home-page.tsx         the full page, rendered per language
-  visuals.tsx           hero system, bridge, service glyphs, real-work links, field network
+  visuals.tsx           hero coordination layer, bridge, service glyphs, real-work links, field network
   site-script.tsx       small progressive-enhancement script (reveal, nav state, matrix)
 lib/site-content.ts     all copy in EN and PT, plus CONTACT_EMAIL
 scripts/export-pages.tsx  static export to docs/ (index.html + pt/index.html)

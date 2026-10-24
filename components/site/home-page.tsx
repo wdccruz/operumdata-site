@@ -12,7 +12,7 @@ function SectionHeading({
   index: string;
   eyebrow: string;
   title: string;
-  description?: string;
+  description?: string | string[];
   id: string;
 }) {
   return (
@@ -23,23 +23,53 @@ function SectionHeading({
       </div>
       <div className="section-heading__body">
         <h2 id={id}>{title}</h2>
-        {description ? <p>{description}</p> : null}
+        {typeof description === "string" ? <p>{description}</p> : null}
+        {Array.isArray(description) ? description.map((d) => <p key={d}>{d}</p>) : null}
       </div>
     </div>
   );
 }
 
+// Inline SVG flags: flag emoji do not render on Windows.
+function Flag({ code }: { code: Lang }) {
+  if (code === "en") {
+    return (
+      <svg className="flag" viewBox="0 0 38 24" aria-hidden="true" focusable="false">
+        <rect width="38" height="24" fill="#b22234" />
+        {[1, 3, 5, 7, 9, 11].map((n) => (
+          <rect key={n} y={(24 / 13) * n} width="38" height={24 / 13} fill="#ffffff" />
+        ))}
+        <rect width="16" height={(24 / 13) * 7} fill="#3c3b6e" />
+        {[0, 1, 2].map((r) =>
+          [0, 1, 2, 3].map((c) => (
+            <circle key={`${r}-${c}`} cx={2.4 + c * 3.8} cy={2.3 + r * 4.2} r="0.75" fill="#ffffff" />
+          )),
+        )}
+      </svg>
+    );
+  }
+  return (
+    <svg className="flag" viewBox="0 0 38 24" aria-hidden="true" focusable="false">
+      <rect width="38" height="24" fill="#009c3b" />
+      <polygon points="19,3 35,12 19,21 3,12" fill="#ffdf00" />
+      <circle cx="19" cy="12" r="5.6" fill="#002776" />
+      <path d="M13.6 10.8 Q19 9.2 24.4 12.6" stroke="#ffffff" strokeWidth="1" fill="none" />
+    </svg>
+  );
+}
+
 function LangSwitch({ lang, label }: { lang: Lang; label: string }) {
-  const items: { code: Lang; short: string; name: string; hrefLang: string }[] = [
-    { code: "en", short: "EN", name: "English", hrefLang: "en" },
-    { code: "pt", short: "PT", name: "Português", hrefLang: "pt-BR" },
+  const items: { code: Lang; name: string; hrefLang: string }[] = [
+    { code: "en", name: "English", hrefLang: "en" },
+    { code: "pt", name: "Português (Brasil)", hrefLang: "pt-BR" },
   ];
   return (
     <nav className="lang-switch" aria-label={label}>
       {items.map((item) =>
         item.code === lang ? (
-          <span key={item.code} className="lang-switch__item is-current" aria-current="true" lang={item.hrefLang}>
-            <abbr title={item.name}>{item.short}</abbr>
+          <span key={item.code} className="lang-switch__item is-current" aria-current="true" lang={item.hrefLang} title={item.name}>
+            <Flag code={item.code} />
+            <span className="sr-only">{item.name}</span>
           </span>
         ) : (
           <a
@@ -49,8 +79,9 @@ function LangSwitch({ lang, label }: { lang: Lang; label: string }) {
             hrefLang={item.hrefLang}
             lang={item.hrefLang}
             aria-label={item.name}
+            title={item.name}
           >
-            {item.short}
+            <Flag code={item.code} />
           </a>
         ),
       )}

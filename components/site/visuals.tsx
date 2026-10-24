@@ -1,213 +1,175 @@
+import type { CSSProperties } from "react";
 import type { SiteContent } from "@/lib/site-content";
 
 /* -------------------------------------------------------------------------- */
-/* Hero: human work -> field capture -> data -> model -> robot                 */
+/* Hero: OperumData coordination layer                                         */
+/* Client requirements -> coordination core -> local network -> execution,     */
+/* closing the loop back into the client's Physical AI / robotics program.     */
 /* -------------------------------------------------------------------------- */
 
+const delay = (s: number): CSSProperties => ({ animationDelay: `${s}s` });
+
+const REQ_TOPS = [130, 220, 310];
+const GROUP_Y = [140, 216, 292, 368];
+
+const TRACES = {
+  loop: "M105 440 V360",
+  req: ["M170 155 H214 V238 H270", "M170 245 H230 V258 H270", "M170 335 H214 V278 H270"],
+  core: ["M390 218 H426 V140 H462", "M390 246 H442 V216 H462", "M390 270 H442 V292 H462", "M390 298 H426 V368 H462"],
+  exec: ["M580 140 H616 V236 H646", "M580 216 H602 V250 H646", "M580 292 H602 V266 H646", "M580 368 H616 V280 H646"],
+  out: "M676 288 V440",
+};
+
+// Timeline of one 8 s cycle (seconds).
+const T = {
+  loop: 0,
+  cards: 0.9,
+  req: [0.6, 0.8, 1.0],
+  core: 1.9,
+  coreOut: [2.2, 2.35, 2.5, 2.65],
+  group: 3.3,
+  execIn: [4.2, 4.35, 4.5, 4.65],
+  exec: 5.5,
+  out: 5.8,
+  band: 7.0,
+};
+
+function Pulse({ d, at }: { d: string; at: number }) {
+  return (
+    <>
+      <path className="cm-rail" d={d} />
+      <path className="cm-pulse" d={d} pathLength="100" style={delay(at)} />
+    </>
+  );
+}
+
 export function HeroSystem({ t }: { t: SiteContent["hero"] }) {
-  const floorX = [-140, 40, 220, 400, 580, 760, 940];
   return (
     <figure className="hero-system">
       <div className="hero-system__frame" data-anim>
-        <svg
-          className="hero-svg"
-          viewBox="0 0 760 560"
-          role="img"
-          aria-label={t.visualLabel}
-        >
+        <div className="hero-system__bar" aria-hidden="true">
+          <span>
+            <span className="signal-dot" />
+            {t.frameTitle}
+          </span>
+          <span>{t.frameMode} · BR</span>
+        </div>
+
+        <svg className="hero-svg" viewBox="0 0 760 500" role="img" aria-label={t.visualLabel}>
           <defs>
-            <radialGradient id="hs-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ff5a1f" stopOpacity="0.32" />
-              <stop offset="60%" stopColor="#ff5a1f" stopOpacity="0.05" />
+            <pattern id="cm-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="0.9" />
+            </pattern>
+            <radialGradient id="cm-core-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ff5a1f" stopOpacity="0.22" />
               <stop offset="100%" stopColor="#ff5a1f" stopOpacity="0" />
             </radialGradient>
-            <linearGradient id="hs-cone" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#ff5a1f" stopOpacity="0.34" />
-              <stop offset="100%" stopColor="#ff5a1f" stopOpacity="0.02" />
-            </linearGradient>
-            <linearGradient id="hs-scan" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ff5a1f" stopOpacity="0" />
-              <stop offset="100%" stopColor="#ff5a1f" stopOpacity="0.5" />
-            </linearGradient>
-            <clipPath id="hs-floor">
-              <rect x="0" y="436" width="760" height="124" />
-            </clipPath>
-            <clipPath id="hs-capture">
-              <rect x="52" y="128" width="266" height="328" />
-            </clipPath>
           </defs>
 
-          {/* floor */}
-          <g className="hs-floor" clipPath="url(#hs-floor)">
-            {[446, 462, 486, 520, 560].map((y) => (
-              <line key={y} x1="0" x2="760" y1={y} y2={y} />
-            ))}
-            {floorX.map((x) => (
-              <line key={x} x1="380" y1="372" x2={x} y2="560" />
-            ))}
-          </g>
-          <line className="hs-horizon" x1="24" x2="736" y1="436" y2="436" />
+          <rect className="cm-dots" x="0" y="0" width="760" height="500" fill="url(#cm-dots)" />
 
-          {/* orbit rings around the model */}
-          <circle className="hs-glow" cx="418" cy="246" r="150" fill="url(#hs-glow)" />
-          <g className="hs-orbit">
-            <circle cx="418" cy="246" r="118" />
-            <circle className="hs-orbit__outer" cx="418" cy="246" r="168" />
+          {/* column headings */}
+          <g className="cm-heads">
+            <text x="40" y="70">{t.cols.req}</text>
+            <text x="330" y="70" textAnchor="middle">{t.cols.core}</text>
+            <text x="470" y="70">{t.cols.net}</text>
+            <text x="676" y="70" textAnchor="middle">{t.cols.exec}</text>
+          </g>
+          <g className="cm-rules">
+            <line x1="40" x2="170" y1="84" y2="84" />
+            <line x1="270" x2="390" y1="84" y2="84" />
+            <line x1="470" x2="600" y1="84" y2="84" />
+            <line x1="640" x2="712" y1="84" y2="84" />
           </g>
 
-          {/* labels */}
-          <text className="hs-label hs-label--strong" x="52" y="60">{t.now}</text>
-          <text className="hs-label hs-label--strong" x="740" y="60" textAnchor="end">{t.future}</text>
-          <line className="hs-rule" x1="52" x2="300" y1="74" y2="74" />
-          <line className="hs-rule" x1="492" x2="740" y1="74" y2="74" />
+          {/* traces + pulses */}
+          <g className="cm-traces">
+            <Pulse d={TRACES.loop} at={T.loop} />
+            {TRACES.req.map((d, i) => <Pulse key={d} d={d} at={T.req[i]} />)}
+            {TRACES.core.map((d, i) => <Pulse key={d} d={d} at={T.coreOut[i]} />)}
+            {TRACES.exec.map((d, i) => <Pulse key={d} d={d} at={T.execIn[i]} />)}
+            <Pulse d={TRACES.out} at={T.out} />
+          </g>
 
-          {/* ---- human worker ---- */}
-          <g className="hs-human">
-            {/* workbench */}
-            <g className="hs-bench">
-              <rect x="196" y="300" width="104" height="8" />
-              <line x1="206" y1="308" x2="206" y2="436" />
-              <line x1="290" y1="308" x2="290" y2="436" />
-            </g>
-            <g className="hs-object">
-              <rect x="250" y="280" width="34" height="20" />
-              <line x1="256" y1="287" x2="278" y2="287" />
-              <line x1="256" y1="294" x2="270" y2="294" />
-            </g>
-
-            {/* egocentric field of view from head-mounted camera */}
-            <polygon className="hs-cone" points="156,166 304,250 232,306" fill="url(#hs-cone)" />
-            <line className="hs-cone-edge" x1="156" y1="166" x2="304" y2="250" />
-            <line className="hs-cone-edge" x1="156" y1="166" x2="232" y2="306" />
-
-            {/* skeleton */}
-            <g className="hs-bones">
-              <line x1="140" y1="186" x2="140" y2="204" />
-              <line x1="116" y1="204" x2="164" y2="204" />
-              <line x1="140" y1="204" x2="142" y2="300" />
-              <line x1="128" y1="304" x2="158" y2="304" />
-              <line x1="128" y1="304" x2="120" y2="370" />
-              <line x1="120" y1="370" x2="114" y2="436" />
-              <line x1="158" y1="304" x2="170" y2="368" />
-              <line x1="170" y1="368" x2="178" y2="436" />
-              <line x1="116" y1="204" x2="102" y2="258" />
-              <line x1="102" y1="258" x2="128" y2="294" />
-            </g>
-            <circle className="hs-head" cx="140" cy="170" r="15" />
-            <rect className="hs-cam" x="150" y="160" width="11" height="7" />
-            <g className="hs-joints">
-              {[
-                [140, 204], [116, 204], [164, 204], [142, 300], [128, 304], [158, 304],
-                [120, 370], [170, 368], [114, 436], [178, 436], [102, 258], [128, 294],
-              ].map(([x, y]) => (
-                <circle key={`${x}-${y}`} cx={x} cy={y} r="3.2" />
-              ))}
-            </g>
-
-            {/* working arm (animated) */}
-            <g className="hs-arm-upper">
-              <line className="hs-bone" x1="164" y1="204" x2="196" y2="250" />
-              <g className="hs-arm-fore">
-                <line className="hs-bone" x1="196" y1="250" x2="232" y2="264" />
-                <g className="hs-tool">
-                  <line x1="232" y1="264" x2="252" y2="279" />
-                  <rect x="224" y="262" width="8" height="11" />
-                </g>
-                <circle className="hs-joint hs-joint--hot" cx="232" cy="264" r="3.6" />
+          {/* client requirement cards */}
+          {t.reqs.map((req, i) => {
+            const y = REQ_TOPS[i];
+            return (
+              <g className="cm-card" key={req.title} style={delay(T.cards + i * 0.1)}>
+                <rect x="40" y={y} width="130" height="50" />
+                <text className="cm-card__title" x="52" y={y + 22}>{req.title}</text>
+                <text className="cm-card__sub" x="52" y={y + 38}>{req.sub}</text>
+                <rect className="cm-port" x="167" y={y + 22} width="6" height="6" />
               </g>
-              <circle className="hs-joint" cx="196" cy="250" r="3.2" />
-            </g>
+            );
+          })}
 
-            {/* tags */}
-            <text className="hs-tag" x="58" y="196">{t.tags.pose}</text>
-            <line className="hs-leader" x1="84" y1="200" x2="112" y2="204" />
-            <text className="hs-tag hs-tag--hands" x="212" y="328">{t.tags.hands}</text>
-            <text className="hs-tag hs-tag--hot hs-tag--tool" x="230" y="226">{t.tags.tool}</text>
+          {/* coordination core */}
+          <circle cx="330" cy="258" r="96" fill="url(#cm-core-glow)" className="cm-core-glow" />
+          <g className="cm-core" style={delay(T.core)}>
+            <rect className="cm-core__frame" x="270" y="198" width="120" height="120" />
+            <path className="cm-core__corners" d="M262 206 V190 H278 M382 190 H398 V206 M398 310 V326 H382 M278 326 H262 V310" />
+            <circle className="cm-core__ring" cx="330" cy="258" r="48" />
+            <circle className="cm-core__ring2" cx="330" cy="258" r="38" />
+            <circle className="cm-core__flash" cx="330" cy="258" r="48" style={delay(T.core)} />
+            <text className="cm-core__title" x="330" y="261" textAnchor="middle">{t.coreTitle}</text>
+            <text className="cm-core__sub" x="330" y="345" textAnchor="middle">{t.coreSub}</text>
+            {[238, 258, 278].map((y) => <rect key={`l${y}`} className="cm-port" x="267" y={y - 3} width="6" height="6" />)}
+            {[218, 246, 270, 298].map((y) => <rect key={`r${y}`} className="cm-port" x="387" y={y - 3} width="6" height="6" />)}
           </g>
 
-          {/* capture frame + scan */}
-          <g className="hs-capture">
-            <path d="M52 146 V128 H70 M300 128 H318 V146 M318 438 V456 H300 M70 456 H52 V438" />
-            <text className="hs-tag hs-tag--hot" x="52" y="118">● {t.tags.capture}</text>
-            <g clipPath="url(#hs-capture)">
-              <rect className="hs-scan" x="52" y="96" width="266" height="34" fill="url(#hs-scan)" />
-            </g>
-          </g>
-
-          {/* ---- data stream ---- */}
-          <g className="hs-stream">
-            <path className="hs-stream__rail" d="M318 236 C344 236 346 212 372 212" />
-            <path className="hs-stream__rail" d="M318 276 C344 276 346 252 372 252" />
-            <path className="hs-stream__rail" d="M318 318 C344 318 346 284 372 284" />
-            <path className="hs-stream__pulse" pathLength="100" d="M318 236 C344 236 346 212 372 212" />
-            <path className="hs-stream__pulse hs-d2" pathLength="100" d="M318 276 C344 276 346 252 372 252" />
-            <path className="hs-stream__pulse hs-d3" pathLength="100" d="M318 318 C344 318 346 284 372 284" />
-          </g>
-          <text className="hs-tag" x="346" y="186" textAnchor="middle">{t.tags.data}</text>
-
-          {/* ---- model grid ---- */}
-          <g className="hs-model">
-            {Array.from({ length: 16 }).map((_, i) => {
-              const col = i % 4;
-              const row = Math.floor(i / 4);
-              return (
-                <rect
-                  key={i}
-                  x={372 + col * 24}
-                  y={200 + row * 24}
-                  width="20"
-                  height="20"
-                  style={{ animationDelay: `${((col * 3 + row * 5) % 8) * -0.45}s` }}
-                />
-              );
-            })}
-          </g>
-          <text className="hs-tag hs-tag--strong" x="418" y="316" textAnchor="middle">{t.tags.model}</text>
-
-          {/* ---- model -> robot ---- */}
-          <g className="hs-stream">
-            <path className="hs-stream__rail" d="M468 236 C506 236 524 312 606 318" />
-            <path className="hs-stream__rail" d="M468 268 C500 268 526 392 596 404" />
-            <path className="hs-stream__pulse hs-d4" pathLength="100" d="M468 236 C506 236 524 312 606 318" />
-            <path className="hs-stream__pulse hs-d5" pathLength="100" d="M468 268 C500 268 526 392 596 404" />
-          </g>
-          <text className="hs-tag" x="740" y="230" textAnchor="end">{t.tags.policy}</text>
-
-          {/* ---- robot arm ---- */}
-          <g className="hs-robot">
-            <rect className="hs-robot__surface" x="664" y="330" width="80" height="6" />
-            <g className="hs-object hs-object--robot">
-              <rect x="690" y="304" width="34" height="26" />
-              <line x1="696" y1="312" x2="718" y2="312" />
-              <line x1="696" y1="320" x2="710" y2="320" />
-            </g>
-            <line className="hs-bench-leg" x1="736" y1="336" x2="736" y2="436" />
-            <rect className="hs-robot__plate" x="566" y="430" width="108" height="10" />
-            <rect className="hs-robot__turret" x="598" y="404" width="44" height="26" rx="3" />
-            <g className="hs-robot-link1">
-              <line className="hs-link-outer" x1="620" y1="404" x2="620" y2="326" />
-              <line className="hs-link-inner" x1="620" y1="404" x2="620" y2="326" />
-              <g className="hs-robot-link2">
-                <line className="hs-link-outer" x1="620" y1="326" x2="690" y2="296" />
-                <line className="hs-link-inner" x1="620" y1="326" x2="690" y2="296" />
-                <g className="hs-gripper">
-                  <polyline points="690,296 704,282 714,286" />
-                  <polyline points="690,296 700,310 712,308" />
-                </g>
-                <circle className="hs-rjoint" cx="690" cy="296" r="7" />
-                <circle className="hs-rjoint__core" cx="690" cy="296" r="2.6" />
+          {/* local network groups */}
+          {t.groups.map((group, g) => {
+            const y = GROUP_Y[g];
+            return (
+              <g className="cm-group" key={group}>
+                <text className="cm-group__label" x="470" y={y - 13}>{group}</text>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <rect
+                    key={i}
+                    className="cm-node"
+                    x={470 + i * 22}
+                    y={y - 5}
+                    width="10"
+                    height="10"
+                    style={delay(T.group + g * 0.15 + i * 0.09)}
+                  />
+                ))}
+                <line className="cm-group__bus" x1="470" x2="568" y1={y + 10} y2={y + 10} />
+                <rect className="cm-port" x="459" y={y - 3} width="6" height="6" />
+                <rect className="cm-port" x="577" y={y - 3} width="6" height="6" />
               </g>
-              <circle className="hs-rjoint" cx="620" cy="326" r="9" />
-              <circle className="hs-rjoint__core" cx="620" cy="326" r="3" />
-            </g>
-            <circle className="hs-rjoint" cx="620" cy="404" r="10" />
-            <circle className="hs-rjoint__core" cx="620" cy="404" r="3.4" />
+            );
+          })}
+
+          {/* field execution */}
+          <g className="cm-exec" style={delay(T.exec)}>
+            <rect className="cm-exec__frame" x="646" y="228" width="60" height="60" />
+            {Array.from({ length: 9 }).map((_, i) => (
+              <rect
+                key={i}
+                className="cm-exec__cell"
+                x={656 + (i % 3) * 15}
+                y={238 + Math.floor(i / 3) * 15}
+                width="9"
+                height="9"
+                style={delay(T.exec + ((i * 4) % 9) * 0.06)}
+              />
+            ))}
+            <text className="cm-exec__label" x="676" y="310" textAnchor="middle">{t.execLabel}</text>
+          </g>
+
+          {/* client program band (closes the loop) */}
+          <g className="cm-band" style={delay(T.band)}>
+            <rect x="40" y="440" width="680" height="44" />
+            <text className="cm-band__left" x="128" y="467">→ {t.band}</text>
+            <text className="cm-band__right" x="704" y="467" textAnchor="end">{t.bandRight}</text>
           </g>
         </svg>
 
-        <ol className="hero-stages" aria-label="HUMAN → ROBOT">
+        <ol className="hero-stages">
           {t.stages.map((stage, i) => (
-            <li key={stage} style={{ animationDelay: `${i * 1.5}s` }}>
+            <li key={stage} style={delay(i * 2)}>
               <span>{String(i + 1).padStart(2, "0")}</span>
               {stage}
             </li>
