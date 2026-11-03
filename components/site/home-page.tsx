@@ -1,5 +1,36 @@
-import { CONTACT_EMAIL, content, langHref, type Lang } from "@/lib/site-content";
+import { CONTACT_EMAIL, SOCIAL_LINKS, content, langHref, type Lang } from "@/lib/site-content";
 import { SiteScript } from "./site-script";
+
+const SOCIAL_ICONS = {
+  linkedin: (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v10.75H3V9.75Zm6.5 0h3.83v1.47h.06c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13v5.21h-4v-4.62c0-1.1-.02-2.52-1.54-2.52-1.54 0-1.78 1.2-1.78 2.44v4.7h-4V9.75Z" />
+    </svg>
+  ),
+  facebook: (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M13.5 21.5v-8h2.7l.4-3.2h-3.1V8.3c0-.9.25-1.55 1.56-1.55h1.66V3.9a22 22 0 0 0-2.42-.13c-2.4 0-4.04 1.47-4.04 4.15v2.38H7.55v3.2h2.71v8h3.24Z" />
+    </svg>
+  ),
+} as const;
+
+function SocialLinks({ label }: { label: string }) {
+  const items = (Object.keys(SOCIAL_ICONS) as (keyof typeof SOCIAL_ICONS)[]).filter((key) => SOCIAL_LINKS[key]);
+  if (!items.length) return null;
+  const names = { linkedin: "LinkedIn", facebook: "Facebook" };
+  return (
+    <ul className="social-links" aria-label={label}>
+      {items.map((key) => (
+        <li key={key}>
+          <a href={SOCIAL_LINKS[key]} target="_blank" rel="noopener noreferrer" aria-label={`${names[key]} (OperumData)`}>
+            {SOCIAL_ICONS[key]}
+            <span>{names[key]}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
 import { Bridge, FieldNetwork, HeroBackground, RealWorkLinks, ServiceGlyph } from "./visuals";
 
 function SectionHeading({
@@ -541,6 +572,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
           <div className="site-footer__brand">
             <Wordmark label={t.footer.top} />
             <p>{t.footer.tagline}</p>
+            <SocialLinks label={t.footer.social} />
           </div>
           <div className="footer-meta">
             <span>{t.footer.base}</span>

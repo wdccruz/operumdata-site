@@ -4,12 +4,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import HomePage from "../components/site/home-page";
 import { content, type Lang } from "../lib/site-content";
 
-// Public URL of the GitHub Pages site. English is served at the root and
-// Portuguese at /pt/.
-const SITE_URL = "https://wdccruz.github.io/operumdata-site/";
+// Public URL of the site. English is served at the root and Portuguese at /pt/.
+// SITE_URL and OUT_DIR can be overridden, e.g. for the HostGator package.
+const SITE_URL = process.env.SITE_URL || "https://wdccruz.github.io/operumdata-site/";
 
 const projectRoot = process.cwd();
-const outputDir = path.join(projectRoot, "docs");
+const outputDir = path.join(projectRoot, process.env.OUT_DIR || "docs");
 const cssDir = path.join(projectRoot, "dist/client/_next/static/css");
 const compiledCss = fs.readdirSync(cssDir).find((file) => file.endsWith(".css"));
 
@@ -67,6 +67,6 @@ function renderPage(lang: Lang) {
 fs.writeFileSync(path.join(outputDir, "index.html"), renderPage("en"));
 fs.mkdirSync(path.join(outputDir, "pt"), { recursive: true });
 fs.writeFileSync(path.join(outputDir, "pt/index.html"), renderPage("pt"));
-fs.writeFileSync(path.join(outputDir, ".nojekyll"), "");
+if (!process.env.OUT_DIR) fs.writeFileSync(path.join(outputDir, ".nojekyll"), "");
 
 console.log(`GitHub Pages exported to ${outputDir} (en: /, pt: /pt/)`);

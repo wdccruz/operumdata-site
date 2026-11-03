@@ -11,6 +11,13 @@ export type Lang = "en" | "pt";
 // the contact section then shows an honest placeholder note instead.
 export const CONTACT_EMAIL = "";
 
+// Official OperumData social profiles. Leave a value empty to hide its icon.
+// Use the full public URL, e.g. "https://www.linkedin.com/company/operumdata/".
+export const SOCIAL_LINKS = {
+  linkedin: "",
+  facebook: "",
+};
+
 const en = {
   htmlLang: "en",
   meta: {
@@ -242,6 +249,7 @@ const en = {
     mode: "Real-world data / Field ops",
     navLabel: "Footer navigation",
     rights: "OperumData. Experimental phase.",
+    social: "Follow OperumData",
     top: "Back to top",
   },
 };
@@ -479,6 +487,7 @@ const pt: SiteContent = {
     mode: "Real-world data / Field ops",
     navLabel: "Navegação do rodapé",
     rights: "OperumData. Fase experimental.",
+    social: "Siga a OperumData",
     top: "Voltar ao topo",
   },
 };
