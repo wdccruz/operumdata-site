@@ -22,7 +22,7 @@ function SocialLinks({ label }: { label: string }) {
     <ul className="social-links" aria-label={label}>
       {items.map((key) => (
         <li key={key}>
-          <a href={SOCIAL_LINKS[key]} target="_blank" rel="noopener noreferrer" aria-label={`${names[key]} (OperumData)`}>
+          <a href={SOCIAL_LINKS[key]} target="_blank" rel="noopener noreferrer" aria-label={`${names[key]} (${label})`}>
             {SOCIAL_ICONS[key]}
             <span>{names[key]}</span>
           </a>

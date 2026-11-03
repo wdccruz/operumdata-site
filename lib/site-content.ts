@@ -14,8 +14,8 @@ export const CONTACT_EMAIL = "";
 // Official OperumData social profiles. Leave a value empty to hide its icon.
 // Use the full public URL, e.g. "https://www.linkedin.com/company/operumdata/".
 export const SOCIAL_LINKS = {
-  linkedin: "",
-  facebook: "",
+  linkedin: "https://www.linkedin.com/in/wagner-cruz-4205232bb/",
+  facebook: "https://www.facebook.com/operumdata/",
 };
 
 const en = {
