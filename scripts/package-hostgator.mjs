@@ -11,7 +11,7 @@ const SITE_URL = process.env.SITE_URL || "https://operumdata.com/";
 if (!/^https:\/\/[^/]+\/$/.test(SITE_URL)) throw new Error(`SITE_URL deve ser https://dominio/ (com barra final): ${SITE_URL}`);
 const OUT_DIR = "hosting/out";
 // O pacote da HostGator é o endereço oficial: sempre indexável.
-const env = { ...process.env, NOINDEX: "", SITE_URL, OUT_DIR };
+const env = { ...process.env, NOINDEX: "", OFFICIAL: "1", SITE_URL, OUT_DIR };
 
 execSync("pnpm export:pages", { stdio: "inherit", env });
 execSync("node scripts/check-pages.mjs", { stdio: "inherit", env });

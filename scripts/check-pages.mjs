@@ -65,6 +65,9 @@ for (const page of pages) {
       fail(`${page.file}: JSON-LD is not valid JSON`);
     }
   }
+  const hasTags = /googletagmanager|fbevents/.test(html);
+  if (hasTags && !process.env.OFFICIAL) fail(`${page.file}: Google/Meta tags outside the official build`);
+  if (hasTags && !html.includes('id="od-consent"')) fail(`${page.file}: tags without the consent bar`);
   if (!process.env.NOINDEX && html.includes('content="noindex')) fail(`${page.file}: page asks not to be indexed`);
 
   const langLinks = [...html.matchAll(/<a[^>]*class="lang-switch__item"[^>]*>/g)];

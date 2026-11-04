@@ -83,6 +83,13 @@ The GitHub Pages workflow exports with `NOINDEX=1` (it is only a copy, pages car
 the HostGator package is the official address and is always indexable. After going live, add the site to Google Search Console and Bing
 Webmaster Tools and submit `sitemap.xml`.
 
+## Google Analytics and Meta Pixel
+
+Fill `TRACKING` in `lib/site-content.ts` and run `pnpm package:hostgator`. Tags are only added
+to the HostGator package (never GitHub Pages) and load only after "Accept" on the cookie bar
+(LGPD); a "Cookies" link in the footer lets visitors change their choice. Shared logic lives in
+`scripts/tracking.mjs` (same file as `src/tracking.mjs` in parceiros-operumdata).
+
 ## Social profiles
 
 Set `SOCIAL_LINKS` in `lib/site-content.ts`. Each filled link shows a LinkedIn

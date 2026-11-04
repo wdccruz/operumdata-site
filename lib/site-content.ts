@@ -18,6 +18,14 @@ export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/operumdata/",
 };
 
+// Official Google and Meta tags. Only the HostGator package (official address)
+// loads them, and only after "Accept" on the cookie bar (LGPD). Leave empty to disable.
+export const TRACKING = {
+  ga4: "", // Google Analytics 4, e.g. "G-XXXXXXXXXX"
+  metaPixel: "", // Meta Pixel, digits only, e.g. "1234567890"
+  googleVerification: "", // optional: content of the google-site-verification meta tag
+};
+
 const en = {
   htmlLang: "en",
   meta: {

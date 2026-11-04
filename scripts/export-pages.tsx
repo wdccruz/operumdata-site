@@ -2,7 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import HomePage from "../components/site/home-page";
-import { content, SOCIAL_LINKS, type Lang } from "../lib/site-content";
+import { content, SOCIAL_LINKS, TRACKING, type Lang } from "../lib/site-content";
+import { trackingSnippet } from "./tracking.mjs";
 
 // Public URL of the site. English is served at the root and Portuguese at /pt/.
 // SITE_URL and OUT_DIR can be overridden, e.g. for the HostGator package.
@@ -13,6 +14,8 @@ const PARTNERS_URL =
   (/operumdata\.com\/$/.test(SITE_URL) ? "https://parceiros.operumdata.com/" : "https://wdccruz.github.io/parceiros-operumdata/");
 // NOINDEX=1 exports a copy that asks search engines not to index it.
 const INDEX = !process.env.NOINDEX;
+// Google/Meta tags only on the official build (HostGator package).
+const TAGS = process.env.OFFICIAL ? TRACKING : { ga4: "", metaPixel: "", googleVerification: "" };
 
 const projectRoot = process.cwd();
 const outputDir = path.join(projectRoot, process.env.OUT_DIR || "docs");
@@ -127,7 +130,9 @@ function renderPage(lang: Lang) {
     <title>${escapeAttr(t.meta.title)}</title>
     <meta name="description" content="${escapeAttr(t.meta.description)}" />
     <meta name="robots" content="${INDEX ? "index, follow, max-image-preview:large, max-snippet:-1" : "noindex, follow"}" />
-    <meta name="author" content="OperumData" />
+    <meta name="author" content="OperumData" />${
+      TAGS.googleVerification ? `\n    <meta name="google-site-verification" content="${escapeAttr(TAGS.googleVerification)}" />` : ""
+    }
     <link rel="canonical" href="${url}" />
     <link rel="alternate" hreflang="en" href="${SITE_URL}" />
     <link rel="alternate" hreflang="pt-BR" href="${SITE_URL}pt/" />
@@ -158,6 +163,7 @@ function renderPage(lang: Lang) {
   </head>
   <body>
     ${markup}
+    ${trackingSnippet({ ga4: TAGS.ga4, metaPixel: TAGS.metaPixel, lang, footerSelector: ".site-footer__bottom" })}
   </body>
 </html>
 `;
