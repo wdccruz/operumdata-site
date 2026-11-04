@@ -71,6 +71,18 @@ This writes `hosting/operumdata-site-hostgator.zip` (static files plus an
 4. Turn on "Show hidden files" and confirm `.htaccess` is there.
 5. Open the domain: English at `/`, Portuguese at `/pt/`.
 
+## Search engines and AI assistants
+
+`pnpm export:pages` also writes `robots.txt` (allows search and AI crawlers, points to the
+sitemap), `sitemap.xml` (EN + PT with hreflang), `llms.txt` (Markdown summary for AI
+assistants, built from `lib/site-content.ts`) and a non-indexed `404.html`. Each page gets
+canonical, hreflang, Open Graph/Twitter tags with `public/og-image*.png` (1200×630) and
+schema.org JSON-LD (Organization, WebSite, WebPage, Service, FAQPage) built from the same copy.
+
+`NOINDEX=1` exports a copy that asks not to be indexed (use it for GitHub Pages once the
+real domain is live). After going live, add the site to Google Search Console and Bing
+Webmaster Tools and submit `sitemap.xml`.
+
 ## Social profiles
 
 Set `SOCIAL_LINKS` in `lib/site-content.ts`. Each filled link shows a LinkedIn

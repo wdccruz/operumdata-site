@@ -1,0 +1,103 @@
+# OperumData
+
+> OperumData identifies, qualifies and coordinates companies, work environments, participants and operational resources for real-world data collection projects in Physical AI and robotics. Initial base in Rio Grande do Sul, Brazil. OperumData is a new company in an experimental phase, open to pilot projects; it does not publish client names, metrics or completed AI data-capture projects.
+
+Turning a technical protocol into a field operation requires access to suitable environments, alignment with local businesses, participant availability, and ongoing coordination.
+
+OperumData develops this operational structure in Brazil, connecting client requirements with real-world execution conditions.
+
+Our role spans environment sourcing and qualification, pilot preparation, equipment logistics, and operational coordination, according to the agreed project scope.
+
+## Pages
+
+- [OperumData (English)](https://wdccruz.github.io/operumdata-site/): field operations in Brazil for real-world data collection, robotics and Physical AI
+- [OperumData (Português)](https://wdccruz.github.io/operumdata-site/pt/): the same content in Brazilian Portuguese
+- [OperumData Parceiros Brasil](https://wdccruz.github.io/parceiros-operumdata/): Portuguese page for Brazilian companies interested in hosting authorised data capture of their work
+
+## What we do
+
+You define what must be captured. We structure the local operation required to execute it in Brazil.
+
+- Field operations for real-world data: On-site collection coordinated under the client's protocol: schedules, roles, field supervision and issue handling.
+- Environment sourcing and qualification: We find worksites that match the protocol and verify access, safety, layout and capture conditions before hardware arrives.
+- Participant coordination: Sourcing by profile, skill and location, followed by consent, onboarding to the protocol and ongoing scheduling.
+- Hardware logistics and custody: Receiving, allocation, field use, storage and return of client-provided equipment, with a named person responsible at every step.
+- Pilot execution: A controlled pilot tests the protocol in the field, exposes friction early and produces initial material for your review.
+- Continuity and visibility: Consistent protocol execution across sites and sessions, with progress, field issues, incidents and re-capture coordination reported in a regular rhythm.
+
+## Real work environments (examples)
+
+- Construction and renovation: Electrical, plumbing, HVAC, finishing, maintenance
+- Automotive workshops: Diagnostics, repair, tool handling
+- Manufacturing and fabrication: Assembly, carpentry, metalwork, small industrial lines
+- Commercial kitchens: Food prep, organisation, cleaning routines
+- Facilities and maintenance: Building upkeep, cleaning, equipment installation
+- Technical field services: Installations, inspections, on-site repairs
+
+What these environments can teach: egocentric capture, procedure learning, manipulation, motion and navigation, tool use.
+Examples of environment categories that can be qualified. Availability and fit are confirmed after reviewing each protocol.
+
+## Field network
+
+OperumData develops and qualifies a network of companies, worksites and participants that can be activated according to the requirements of each project.
+
+Capacity does not depend on in-house staff alone. It comes from identifying, qualifying and coordinating the right companies, locations and people for each operation. Environments can belong to third parties, and participants do not need to be OperumData employees.
+
+## Method: Pilot first. Scale only what the field proves.
+
+1. Scope: Protocol, tasks, environments, participant profile, hardware, expected duration and acceptance criteria.
+2. Sourcing: Compatible companies, environments and participants are identified and operating conditions verified.
+3. Pilot: The protocol is tested in the field, difficulties surface and initial material goes to the client for review.
+4. Operate: Participants, sites, equipment, schedule and execution are coordinated with visibility on progress.
+5. Scale: Capacity grows gradually, based on what the pilot actually demonstrated.
+
+Validation gate: Client review of pilot material and field learnings comes before any commitment to scale.
+
+## Control and trust
+
+- Privacy: Project privacy requirements and environment-specific restrictions are mapped before capture.
+- Consent: Participation is informed and consented, with the scope of capture explained up front.
+- Authorizations: Worksite owners authorise collection and the areas where capture is permitted.
+- Operational responsibility: Clear roles for participants, sites and coordinators, with onboarding to the protocol.
+- Hardware chain of custody: Every device has a responsible person from receiving to return.
+- Monitoring and visibility: Schedule, progress, field issues, incidents and re-capture coordination are tracked.
+
+## Background
+
+OperumData grows out of its founder's experience coordinating technical services and field operations since 2015: managing teams, suppliers and contractors, technical purchasing, schedules, logistics and execution in real work environments.
+
+To be clear: this background is not prior experience in AI data capture. It is the operational foundation OperumData now applies to structuring and coordinating real-world data projects in Brazil.
+
+## FAQ
+
+### Do you only use your own employees?
+
+No. Depending on the project, participants can be identified in partner companies and third-party environments. OperumData qualifies and coordinates participation according to the defined requirements.
+
+### Do the worksites need to belong to OperumData?
+
+No. We can run operations in third-party locations, as long as they are compatible with the protocol and collection is authorised.
+
+### Can you recruit new participants?
+
+Yes. Sourcing follows the profile, experience, location and activities the project requires.
+
+### Do you provide the hardware?
+
+It depends on the scope. We can operate with hardware and applications provided by the client. Other needs are assessed while defining the project.
+
+### Can you commit to weekly capacity before reviewing the project?
+
+Not responsibly. Capacity depends on the protocol, tasks, environments, hardware, logistics and acceptance criteria. When needed, a pilot produces an estimate based on real execution.
+
+### Where do you operate?
+
+The initial operation is based in Rio Grande do Sul. New locations are evaluated according to each project's scope, timeline and logistics.
+
+### How are privacy, authorizations and consent handled?
+
+Requirements are defined for each operation. Worksite authorizations, consented participation, areas permitted for capture and applicable privacy requirements are organised before collection begins.
+
+## Contact
+
+Tell us which tasks, environments, participants, hardware, volume and acceptance criteria your project requires. We will assess operational feasibility and the right pilot format.

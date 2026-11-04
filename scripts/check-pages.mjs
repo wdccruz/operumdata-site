@@ -49,8 +49,39 @@ for (const page of pages) {
     }
   }
 
+  const title = html.match(/<title>([^<]*)<\/title>/)?.[1] || "";
+  if (title.length > 70) fail(`${page.file}: <title> is ${title.length} chars (max 70)`);
+  if (!html.includes('property="og:image"')) fail(`${page.file}: og:image missing`);
+  if (!html.includes('hreflang="pt-BR"') || !html.includes('hreflang="x-default"')) fail(`${page.file}: hreflang alternates missing`);
+  const ld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  if (!ld) fail(`${page.file}: JSON-LD missing`);
+  else {
+    try {
+      const data = JSON.parse(ld[1]);
+      for (const type of ["Organization", "WebPage", "Service", "FAQPage"]) {
+        if (!data["@graph"].some((node) => node["@type"] === type)) fail(`${page.file}: JSON-LD ${type} missing`);
+      }
+    } catch {
+      fail(`${page.file}: JSON-LD is not valid JSON`);
+    }
+  }
+  if (!process.env.NOINDEX && html.includes('content="noindex')) fail(`${page.file}: page asks not to be indexed`);
+
   const langLinks = [...html.matchAll(/<a[^>]*class="lang-switch__item"[^>]*>/g)];
   if (langLinks.length < 1) fail(`${page.file}: language switcher link missing`);
+}
+
+for (const file of ["robots.txt", "sitemap.xml", "llms.txt", "404.html", "og-image.png", "og-image-pt.png", "apple-touch-icon.png", "icon-512.png"]) {
+  if (!fs.existsSync(path.join(docs, file))) fail(`${file}: missing`);
+}
+if (fs.existsSync(path.join(docs, "robots.txt")) && !process.env.NOINDEX) {
+  const robots = fs.readFileSync(path.join(docs, "robots.txt"), "utf8");
+  if (!robots.includes(`Sitemap: ${SITE_URL}sitemap.xml`)) fail("robots.txt: Sitemap line missing");
+  if (/^Disallow: \/$/m.test(robots)) fail("robots.txt blocks the whole site");
+}
+if (fs.existsSync(path.join(docs, "sitemap.xml"))) {
+  const sitemap = fs.readFileSync(path.join(docs, "sitemap.xml"), "utf8");
+  for (const loc of [SITE_URL, `${SITE_URL}pt/`]) if (!sitemap.includes(`<loc>${loc}</loc>`)) fail(`sitemap.xml: ${loc} missing`);
 }
 
 const css = fs.readFileSync(path.join(docs, "assets/site.css"), "utf8");

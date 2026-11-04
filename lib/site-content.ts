@@ -21,9 +21,10 @@ export const SOCIAL_LINKS = {
 const en = {
   htmlLang: "en",
   meta: {
-    title: "OperumData | Brazil field operations for real-world data, robotics & Physical AI",
+    title: "Real-World Data Collection in Brazil for Physical AI | OperumData",
     description:
-      "OperumData structures and coordinates field operations in Brazil for real-world data collection: worksites, participants, hardware, authorizations and local execution for robotics and Physical AI projects.",
+      "Field operations in Brazil for real-world data collection: qualified worksites, consented participants, hardware logistics and pilots for robotics and Physical AI.",
+    ogAlt: "OperumData: Real-World Data Collection. Field Operations in Brazil.",
   },
   skip: "Skip to content",
   homeLabel: "OperumData, home",
@@ -259,9 +260,10 @@ export type SiteContent = typeof en;
 const pt: SiteContent = {
   htmlLang: "pt-BR",
   meta: {
-    title: "OperumData | Operações de campo no Brasil para real-world data, robótica e Physical AI",
+    title: "Coleta de dados do mundo real no Brasil para Physical AI | OperumData",
     description:
-      "A OperumData estrutura e coordena operações de campo no Brasil para coleta de dados do mundo real: ambientes, participantes, hardware, autorizações e execução local para projetos de robótica e Physical AI.",
+      "Operações de campo no Brasil para coleta de dados do mundo real: ambientes qualificados, participantes, logística de hardware e pilotos para robótica e Physical AI.",
+    ogAlt: "OperumData: Coleta de Dados do Mundo Real. Operações de Campo no Brasil.",
   },
   skip: "Pular para o conteúdo",
   homeLabel: "OperumData, início",
