@@ -8,8 +8,8 @@ const docs = path.join(process.cwd(), process.env.OUT_DIR || "docs");
 const SITE_URL = process.env.SITE_URL || "https://wdccruz.github.io/operumdata-site/";
 const SOCIAL = /^https:\/\/(www\.)?(linkedin\.com|facebook\.com)\//;
 const pages = [
-  { file: "index.html", lang: "en", mustContain: ["Real-World Data Collection.", "Field Operations", "Discuss your Brazil field data project", "Send your project brief"] },
-  { file: "pt/index.html", lang: "pt-BR", mustContain: ["Coleta de Dados do Mundo Real.", "Operações de Campo", "Enviar o briefing do projeto"] },
+  { file: "index.html", lang: "en", mustContain: ["Real-World Data Collection.", "Field Operations", "Discuss your Brazil field data project", "Send your project brief", "id=\"brief-form\""] },
+  { file: "pt/index.html", lang: "pt-BR", mustContain: ["Coleta de Dados do Mundo Real.", "Operações de Campo", "Enviar o briefing do projeto", "id=\"brief-form\""] },
 ];
 
 const failures = [];
@@ -43,7 +43,7 @@ for (const page of pages) {
     } else if (/^https?:\/\//.test(ref)) {
       if (!ref.startsWith(SITE_URL) && !SOCIAL.test(ref)) fail(`${page.file}: unexpected external reference ${ref}`);
     } else {
-      const target = path.resolve(dir, ref.split("#")[0]);
+      const target = path.resolve(dir, ref.split("#")[0].split("?")[0]);
       const resolved = ref.endsWith("/") || fs.existsSync(target) && fs.statSync(target).isDirectory() ? path.join(target, "index.html") : target;
       if (!resolved.startsWith(docs) || !fs.existsSync(resolved)) fail(`${page.file}: broken local reference ${ref}`);
     }
