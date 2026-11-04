@@ -19,5 +19,11 @@ fs.copyFileSync(path.join(root, "hosting/htaccess"), path.join(root, OUT_DIR, ".
 
 const zip = path.join(root, "hosting/operumdata-site-hostgator.zip");
 fs.rmSync(zip, { force: true });
-execSync(`cd ${OUT_DIR} && zip -qr ${zip} . -x '.DS_Store'`, { stdio: "inherit", shell: "/bin/bash" });
+if (process.platform === "win32") {
+  // Windows não tem zip: usa o tar do sistema, que também gera .zip.
+  const tar = path.join(process.env.SystemRoot || "C:\\Windows", "System32", "tar.exe");
+  execSync(`"${tar}" -a -c -f "${zip}" .`, { stdio: "inherit", cwd: path.join(root, OUT_DIR) });
+} else {
+  execSync(`cd ${OUT_DIR} && zip -qr ${zip} . -x '.DS_Store'`, { stdio: "inherit", shell: "/bin/bash" });
+}
 console.log(`Pacote pronto para ${SITE_URL}: ${path.relative(root, zip)}`);
