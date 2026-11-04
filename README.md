@@ -79,8 +79,8 @@ assistants, built from `lib/site-content.ts`) and a non-indexed `404.html`. Each
 canonical, hreflang, Open Graph/Twitter tags with `public/og-image*.png` (1200×630) and
 schema.org JSON-LD (Organization, WebSite, WebPage, Service, FAQPage) built from the same copy.
 
-`NOINDEX=1` exports a copy that asks not to be indexed (use it for GitHub Pages once the
-real domain is live). After going live, add the site to Google Search Console and Bing
+The GitHub Pages workflow exports with `NOINDEX=1` (it is only a copy, pages carry noindex);
+the HostGator package is the official address and is always indexable. After going live, add the site to Google Search Console and Bing
 Webmaster Tools and submit `sitemap.xml`.
 
 ## Social profiles

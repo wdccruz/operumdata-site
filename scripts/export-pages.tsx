@@ -185,7 +185,8 @@ Allow: /
 
 Sitemap: ${SITE_URL}sitemap.xml
 `
-    : "User-agent: *\nDisallow: /\n",
+    : // Noindex copy: crawling stays open so search engines can see the noindex tag.
+      "# Non-indexed copy (pages carry noindex)\nUser-agent: *\nAllow: /\n",
 );
 
 const today = new Date().toISOString().slice(0, 10);
