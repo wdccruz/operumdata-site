@@ -18,6 +18,9 @@ export const SOCIAL_LINKS = {
   facebook: "https://www.facebook.com/operumdata/",
 };
 
+// Team CRM (login required). Shown as a discreet footer link; leave empty to hide.
+export const CRM_URL = "https://wdccruz.github.io/operumdata-crm/";
+
 // Official Google and Meta tags. Only the HostGator package (official address)
 // loads them, and only after "Accept" on the cookie bar (LGPD). Leave empty to disable.
 export const TRACKING = {
@@ -269,6 +272,7 @@ const en = {
     rights: "OperumData. Experimental phase.",
     social: "Follow OperumData",
     top: "Back to top",
+    crm: "CRM access",
   },
 };
 
@@ -517,6 +521,7 @@ const pt: SiteContent = {
     rights: "OperumData. Fase experimental.",
     social: "Siga a OperumData",
     top: "Voltar ao topo",
+    crm: "Acesso CRM",
   },
 };
 

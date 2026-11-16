@@ -1797,6 +1797,7 @@ a.lang-switch__item:focus-visible { opacity: 1; filter: none; background: rgba(2
 }
 
 .site-footer__bottom a:hover { color: var(--text); }
+.site-footer__links { display: inline-flex; flex-wrap: wrap; gap: 20px; }
 
 /* ========================================================================== */
 /* Keyframes                                                                   */

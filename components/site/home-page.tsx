@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, SOCIAL_LINKS, content, langHref, type Lang } from "@/lib/site-content";
+import { CONTACT_EMAIL, CRM_URL, SOCIAL_LINKS, content, langHref, type Lang } from "@/lib/site-content";
 import { SiteScript } from "./site-script";
 
 const SOCIAL_ICONS = {
@@ -628,7 +628,14 @@ export default function HomePage({ lang }: { lang: Lang }) {
           <span>
             © {year} {t.footer.rights}
           </span>
-          <a href="#top">{t.footer.top} ↑</a>
+          <span className="site-footer__links">
+            {CRM_URL ? (
+              <a href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
+                {t.footer.crm} ↗
+              </a>
+            ) : null}
+            <a href="#top">{t.footer.top} ↑</a>
+          </span>
         </div>
       </footer>
       <SiteScript />
