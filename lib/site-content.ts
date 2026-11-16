@@ -273,6 +273,11 @@ const en = {
     social: "Follow OperumData",
     top: "Back to top",
     crm: "CRM access",
+    portalEyebrow: "Partner portal",
+    portalTitle: "Our own operations platform",
+    portalText: "Restricted area for partner companies and the OperumData team: follow leads, meetings and approvals in one place.",
+    portalCta: "Open the portal",
+    portalNote: "Login required",
   },
 };
 
@@ -522,6 +527,11 @@ const pt: SiteContent = {
     social: "Siga a OperumData",
     top: "Voltar ao topo",
     crm: "Acesso CRM",
+    portalEyebrow: "Portal de parceiros",
+    portalTitle: "Plataforma própria de operação",
+    portalText: "Área restrita para empresas parceiras e equipe OperumData: acompanhe leads, reuniões e aprovações em um só lugar.",
+    portalCta: "Acessar o portal",
+    portalNote: "Acesso com login",
   },
 };
 

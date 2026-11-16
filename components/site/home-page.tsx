@@ -604,6 +604,23 @@ export default function HomePage({ lang }: { lang: Lang }) {
       </main>
 
       <footer className="site-footer">
+        {CRM_URL ? (
+          <div className="shell">
+            <div className="footer-portal">
+              <div className="footer-portal__copy">
+                <span className="footer-portal__eyebrow">{t.footer.portalEyebrow}</span>
+                <strong className="footer-portal__title">{t.footer.portalTitle}</strong>
+                <p>{t.footer.portalText}</p>
+              </div>
+              <div className="footer-portal__action">
+                <a className="btn btn--primary" href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
+                  {t.footer.portalCta} <span className="btn__arrow">↗</span>
+                </a>
+                <span className="footer-portal__note">{t.footer.portalNote}</span>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <div className="shell site-footer__grid">
           <div className="site-footer__brand">
             <Wordmark label={t.footer.top} />
@@ -629,11 +646,6 @@ export default function HomePage({ lang }: { lang: Lang }) {
             © {year} {t.footer.rights}
           </span>
           <span className="site-footer__links">
-            {CRM_URL ? (
-              <a className="footer-crm" href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
-                {t.footer.crm} ↗
-              </a>
-            ) : null}
             <a href="#top">{t.footer.top} ↑</a>
           </span>
         </div>
