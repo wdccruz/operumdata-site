@@ -16,6 +16,8 @@ const env = { ...process.env, NOINDEX: "", OFFICIAL: "1", SITE_URL, OUT_DIR };
 execSync("pnpm export:pages", { stdio: "inherit", env });
 execSync("node scripts/check-pages.mjs", { stdio: "inherit", env });
 fs.copyFileSync(path.join(root, "hosting/htaccess"), path.join(root, OUT_DIR, ".htaccess"));
+// Brief form endpoint. Its destination lives in enviar-config.php, created only on the server.
+fs.copyFileSync(path.join(root, "hosting/enviar.php"), path.join(root, OUT_DIR, "enviar.php"));
 
 const zip = path.join(root, "hosting/operumdata-site-hostgator.zip");
 fs.rmSync(zip, { force: true });

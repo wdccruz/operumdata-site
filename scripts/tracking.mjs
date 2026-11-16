@@ -45,23 +45,25 @@ export function trackingSnippet({ ga4, metaPixel, lang = "pt", privacyHref = "",
   const cfg = JSON.stringify({ ga: ga4 || null, px: metaPixel ? String(metaPixel) : null, sel: footerSelector, prefs: t.prefs });
   return `<div class="od-consent" id="od-consent" role="dialog" aria-live="polite" aria-label="${t.label}" hidden>
   <p>${t.msg}${privacyHref ? ` <a href="${privacyHref}">${t.privacy}</a>` : ""}</p>
-  <div class="od-consent__actions"><button type="button" data-consent="no">${t.decline}</button><button type="button" data-consent="yes" class="is-primary">${t.accept}</button></div>
+  <div class="od-consent__actions"><button type="button" data-consent="no">${t.decline}</button><button type="button" data-consent="yes">${t.accept}</button></div>
 </div>
 <style>
-.od-consent{position:fixed;left:16px;bottom:16px;z-index:1000;max-width:420px;padding:16px 18px;background:#111114;color:#f7f4ef;border:1px solid rgba(247,244,239,.18);box-shadow:0 12px 40px rgba(0,0,0,.5);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.od-consent{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:flex;align-items:center;justify-content:center;gap:12px 24px;flex-wrap:wrap;padding:12px 20px;background:#111114;color:#f7f4ef;border-top:1px solid rgba(247,244,239,.18);box-shadow:0 -8px 30px rgba(0,0,0,.45);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 .od-consent[hidden]{display:none}
-.od-consent p{margin:0 0 12px;color:#d9d5ce}
+.od-consent p{margin:0;max-width:760px;color:#d9d5ce}
 .od-consent a{color:#ff7442}
-.od-consent__actions{display:flex;gap:8px;justify-content:flex-end}
-.od-consent button{font:inherit;font-weight:600;padding:8px 16px;cursor:pointer;background:transparent;color:#f7f4ef;border:1px solid rgba(247,244,239,.35)}
-.od-consent button.is-primary{background:#ff5a1f;border-color:#ff5a1f;color:#050506}
+.od-consent__actions{display:flex;gap:8px}
+.od-consent button{font:inherit;font-weight:600;min-width:104px;padding:8px 16px;cursor:pointer;background:transparent;color:#f7f4ef;border:1px solid rgba(247,244,239,.55)}
+.od-consent button:hover{background:rgba(247,244,239,.08)}
 .od-consent button:focus-visible{outline:2px solid #ff7442;outline-offset:2px}
 .od-consent-link{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer;opacity:.8}
-@media (max-width:600px){.od-consent{left:8px;right:8px;bottom:8px;max-width:none}}
+@media (max-width:600px){.od-consent{padding:12px 16px;font-size:13px}.od-consent__actions{width:100%}.od-consent button{flex:1}}
 </style>
 <script>
 (function(){
   var C=${cfg},K="od-consent-v1",d=document,box=d.getElementById("od-consent");
+  function pad(){d.body.style.paddingBottom=box.hidden?"":box.offsetHeight+"px"}
+  window.addEventListener("resize",pad);
   function get(){try{return localStorage.getItem(K)}catch(e){return null}}
   function set(v){try{localStorage.setItem(K,v)}catch(e){}}
   function load(){
@@ -77,13 +79,13 @@ export function trackingSnippet({ ga4, metaPixel, lang = "pt", privacyHref = "",
   }
   box.addEventListener("click",function(e){
     var b=e.target.closest("[data-consent]");if(!b)return;
-    var v=b.getAttribute("data-consent"),before=get();set(v);box.hidden=true;
+    var v=b.getAttribute("data-consent"),before=get();set(v);box.hidden=true;pad();
     if(v==="yes"&&before!=="yes")load();
     if(v==="no"&&before==="yes")location.reload();
   });
   var f=d.querySelector(C.sel);
-  if(f){var l=d.createElement("button");l.type="button";l.className="od-consent-link";l.textContent=C.prefs;l.addEventListener("click",function(){box.hidden=false;box.querySelector("button").focus()});f.appendChild(l)}
-  var v=get();if(v==="yes")load();else if(v!=="no")box.hidden=false;
+  if(f){var l=d.createElement("button");l.type="button";l.className="od-consent-link";l.textContent=C.prefs;l.addEventListener("click",function(){box.hidden=false;pad();box.querySelector("button").focus()});f.appendChild(l)}
+  var v=get();if(v==="yes")load();else if(v!=="no"){box.hidden=false;pad()}
 })();
 </script>`;
 }

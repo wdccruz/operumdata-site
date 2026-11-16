@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, SOCIAL_LINKS, content, langHref, type Lang } from "@/lib/site-content";
+import { CONTACT_EMAIL, CRM_URL, SOCIAL_LINKS, content, langHref, type Lang } from "@/lib/site-content";
 import { SiteScript } from "./site-script";
 
 const SOCIAL_ICONS = {
@@ -138,8 +138,8 @@ function Wordmark({ label }: { label: string }) {
 
 export default function HomePage({ lang }: { lang: Lang }) {
   const t = content[lang];
-  const mailto = (subject: string, body?: string) =>
-    `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}`;
+  const mailto = (subject: string) => `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
+  const f = t.cta.form;
   const year = new Date().getFullYear();
 
   return (
@@ -541,16 +541,52 @@ export default function HomePage({ lang }: { lang: Lang }) {
               </div>
               <h2 id="contact-title">{t.cta.title}</h2>
               <p>{t.cta.text}</p>
-              <div className="final-cta__actions">
-                <a className="btn btn--primary btn--lg" href={mailto(t.cta.emailSubject, t.cta.emailBody)}>
-                  {t.cta.primary}
-                  <span aria-hidden="true" className="btn__arrow">→</span>
-                </a>
-                <a className="btn btn--ghost btn--lg" href={mailto(t.cta.emailSubject)}>
-                  {t.cta.secondary}
-                </a>
-              </div>
-              {CONTACT_EMAIL ? null : <p className="final-cta__note">{t.cta.placeholder}</p>}
+              <form className="brief-form" id="brief-form" action={lang === "pt" ? "../enviar.php" : "enviar.php"} method="post" noValidate data-lang={lang}>
+                <div className="brief-form__row">
+                  <label className="brief-form__field">
+                    <span>{f.name} <b aria-hidden="true">*</b></span>
+                    <input name="nome" autoComplete="name" required maxLength={120} />
+                  </label>
+                  <label className="brief-form__field">
+                    <span>{f.company} <b aria-hidden="true">*</b></span>
+                    <input name="empresa" autoComplete="organization" required maxLength={160} />
+                  </label>
+                </div>
+                <div className="brief-form__row">
+                  <label className="brief-form__field">
+                    <span>{f.email} <b aria-hidden="true">*</b></span>
+                    <input name="email" type="email" autoComplete="email" required maxLength={160} />
+                  </label>
+                  <label className="brief-form__field">
+                    <span>{f.country}</span>
+                    <input name="pais" autoComplete="country-name" maxLength={80} />
+                  </label>
+                </div>
+                <label className="brief-form__field">
+                  <span>{f.brief} <b aria-hidden="true">*</b></span>
+                  <textarea name="briefing" rows={6} required maxLength={4000} placeholder={f.briefPlaceholder} />
+                </label>
+                <label className="brief-form__hp" aria-hidden="true">
+                  Website
+                  <input name="site_url" tabIndex={-1} autoComplete="off" />
+                </label>
+                <label className="brief-form__consent">
+                  <input name="consentimento" type="checkbox" value="1" required />
+                  <span>{f.consent} <b aria-hidden="true">*</b></span>
+                </label>
+                <div className="final-cta__actions">
+                  <button className="btn btn--primary btn--lg" type="submit" data-sending={f.sending}>
+                    {f.submit}
+                    <span aria-hidden="true" className="btn__arrow">→</span>
+                  </button>
+                </div>
+                <p className="brief-form__result" role="status" aria-live="polite" hidden data-ok={f.ok} data-invalid={f.invalid}>
+                  <span />
+                </p>
+                <p className="brief-form__fallback" hidden>
+                  {f.error} <a href={mailto(t.cta.emailSubject)}>{CONTACT_EMAIL}</a>.
+                </p>
+              </form>
             </div>
             <div className="brief reveal">
               <div className="mono-label">{t.cta.briefLabel}</div>
@@ -568,6 +604,23 @@ export default function HomePage({ lang }: { lang: Lang }) {
       </main>
 
       <footer className="site-footer">
+        {CRM_URL ? (
+          <div className="shell">
+            <div className="footer-portal">
+              <div className="footer-portal__copy">
+                <span className="footer-portal__eyebrow">{t.footer.portalEyebrow}</span>
+                <strong className="footer-portal__title">{t.footer.portalTitle}</strong>
+                <p>{t.footer.portalText}</p>
+              </div>
+              <div className="footer-portal__action">
+                <a className="btn btn--primary" href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
+                  {t.footer.portalCta} <span className="btn__arrow">↗</span>
+                </a>
+                <span className="footer-portal__note">{t.footer.portalNote}</span>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <div className="shell site-footer__grid">
           <div className="site-footer__brand">
             <Wordmark label={t.footer.top} />
@@ -592,7 +645,9 @@ export default function HomePage({ lang }: { lang: Lang }) {
           <span>
             © {year} {t.footer.rights}
           </span>
-          <a href="#top">{t.footer.top} ↑</a>
+          <span className="site-footer__links">
+            <a href="#top">{t.footer.top} ↑</a>
+          </span>
         </div>
       </footer>
       <SiteScript />

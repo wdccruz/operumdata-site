@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -36,6 +37,8 @@ for (const file of ["favicon.svg", "og-image.png", "og-image-pt.png", "apple-tou
 let css = fs.readFileSync(path.join(cssDir, compiledCss), "utf8");
 css = css.replaceAll("/fonts/", "../fonts/");
 fs.writeFileSync(path.join(outputDir, "assets/site.css"), css);
+// Version in the link: the server caches CSS for 30 days, so each change needs a new URL.
+const cssVersion = createHash("sha256").update(css).digest("hex").slice(0, 10);
 
 const escapeAttr = (value: string) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;");
 
@@ -158,7 +161,7 @@ function renderPage(lang: Lang) {
     <link rel="apple-touch-icon" href="${prefix}apple-touch-icon.png" />
     <link rel="alternate" type="text/plain" title="LLM summary" href="${prefix}llms.txt" />
     <link rel="preload" href="${prefix}fonts/urw-gothic-demi.otf" as="font" type="font/otf" crossorigin />
-    <link rel="stylesheet" href="${prefix}assets/site.css" />
+    <link rel="stylesheet" href="${prefix}assets/site.css?v=${cssVersion}" />
     <script type="application/ld+json">${ld}</script>
   </head>
   <body>

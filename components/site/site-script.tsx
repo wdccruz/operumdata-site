@@ -1,6 +1,7 @@
 // Small progressive-enhancement script. The page is fully readable without it:
 // it only adds reveal-on-scroll, pauses off-screen animations, highlights the
-// current section in the nav and drives the "real work" connection matrix.
+// current section in the nav, drives the "real work" connection matrix and
+// sends the project brief form to enviar.php.
 const script = `
 (function () {
   var d = document;
@@ -111,6 +112,43 @@ const script = `
         current = (current + 1) % rows.length;
         setFocus(current);
       }, reduce ? 4200 : 2600);
+  }
+  var form = d.getElementById("brief-form");
+  if (form) {
+    var result = form.querySelector(".brief-form__result");
+    var fallback = form.querySelector(".brief-form__fallback");
+    var btn = form.querySelector('button[type="submit"]');
+    var label = btn.innerHTML;
+    function say(kind, text) {
+      result.hidden = false;
+      result.className = "brief-form__result is-" + kind;
+      result.firstChild.textContent = text;
+    }
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      result.hidden = true;
+      fallback.hidden = true;
+      var bad = [];
+      form.querySelectorAll("input[required], textarea[required]").forEach(function (el) {
+        var ok = el.type === "checkbox" ? el.checked : el.value.trim() !== "" && (el.type !== "email" || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(el.value.trim()));
+        el.toggleAttribute("aria-invalid", !ok);
+        if (!ok) bad.push(el);
+      });
+      if (bad.length) { say("error", result.getAttribute("data-invalid")); bad[0].focus(); return; }
+      var data = { idioma: form.getAttribute("data-lang") };
+      new FormData(form).forEach(function (v, k) { data[k] = v; });
+      btn.disabled = true;
+      btn.textContent = btn.getAttribute("data-sending");
+      fetch(form.getAttribute("action"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+        .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+        .then(function (j) {
+          if (!j || !j.ok) throw new Error("send");
+          say("ok", result.getAttribute("data-ok"));
+          form.reset();
+        })
+        .catch(function () { fallback.hidden = false; })
+        .then(function () { btn.disabled = false; btn.innerHTML = label; });
+    });
   }
 })();
 `;

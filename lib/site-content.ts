@@ -7,9 +7,9 @@
 
 export type Lang = "en" | "pt";
 
-// Commercial contact address. Leave empty until a real inbox exists:
-// the contact section then shows an honest placeholder note instead.
-export const CONTACT_EMAIL = "";
+// Inbox that receives project briefs (the contact form sends here through
+// enviar.php on the HostGator server; it is also the fallback shown on errors).
+export const CONTACT_EMAIL = "parceiros@operumdata.com";
 
 // Official OperumData social profiles. Leave a value empty to hide its icon.
 // Use the full public URL, e.g. "https://www.linkedin.com/company/operumdata/".
@@ -17,6 +17,9 @@ export const SOCIAL_LINKS = {
   linkedin: "https://www.linkedin.com/in/wagner-cruz-4205232bb/",
   facebook: "https://www.facebook.com/operumdata/",
 };
+
+// Team CRM (login required). Shown as a discreet footer link; leave empty to hide.
+export const CRM_URL = "https://wdccruz.github.io/operumdata-crm/";
 
 // Official Google and Meta tags. Only the HostGator package (official address)
 // loads them, and only after "Accept" on the cookie bar (LGPD). Leave empty to disable.
@@ -244,13 +247,22 @@ const en = {
       "Acceptance criteria",
       "Privacy and consent requirements",
     ],
-    primary: "Send your project brief",
-    secondary: "Discuss your Brazil field data project",
     emailSubject: "Brazil field data project",
-    emailBody:
-      "Project brief\n\n1. Tasks and environments:\n2. Participant profile:\n3. Hardware and capture setup:\n4. Volume, timeline and region:\n5. Acceptance criteria:\n6. Privacy and consent requirements:\n",
-    placeholder:
-      "Experimental version: a dedicated commercial contact address will be published here before launch. Until then, the buttons open a pre-filled brief in your email app with the recipient left blank.",
+    form: {
+      name: "Name",
+      company: "Company",
+      email: "Work email",
+      country: "Country",
+      brief: "Project brief",
+      briefPlaceholder: "Tasks and environments, participant profile, hardware, volume, timeline, region, acceptance criteria and privacy requirements.",
+      consent: "I agree that OperumData may use this information to reply about this project.",
+      required: "Required",
+      submit: "Send your project brief",
+      sending: "Sending…",
+      ok: "Thank you. We received your brief and will reply by email.",
+      error: "We could not send your brief right now. Please try again in a few minutes or write to",
+      invalid: "Please fill in the highlighted fields.",
+    },
   },
   footer: {
     tagline: "Field operations in Brazil for real-world data, robotics and Physical AI.",
@@ -260,6 +272,12 @@ const en = {
     rights: "OperumData. Experimental phase.",
     social: "Follow OperumData",
     top: "Back to top",
+    crm: "CRM access",
+    portalEyebrow: "Partners and team",
+    portalTitle: "Partner Operations Portal",
+    portalText: "Track establishments, meetings, and approvals in one place.",
+    portalCta: "Sign in",
+    portalNote: "Login required",
   },
 };
 
@@ -483,13 +501,22 @@ const pt: SiteContent = {
       "Critérios de aceitação",
       "Requisitos de privacidade e consentimento",
     ],
-    primary: "Enviar o briefing do projeto",
-    secondary: "Discutir seu projeto de dados no Brasil",
     emailSubject: "Projeto de dados de campo no Brasil",
-    emailBody:
-      "Briefing do projeto\n\n1. Tarefas e ambientes:\n2. Perfil dos participantes:\n3. Hardware e configuração de captura:\n4. Volume, prazo e região:\n5. Critérios de aceitação:\n6. Requisitos de privacidade e consentimento:\n",
-    placeholder:
-      "Versão experimental: um endereço comercial dedicado será publicado aqui antes do lançamento. Até lá, os botões abrem um briefing pré-preenchido no seu aplicativo de e-mail, com o destinatário em branco.",
+    form: {
+      name: "Nome",
+      company: "Empresa",
+      email: "E-mail corporativo",
+      country: "País",
+      brief: "Briefing do projeto",
+      briefPlaceholder: "Tarefas e ambientes, perfil dos participantes, equipamentos, volume, prazo, região, critérios de aceitação e requisitos de privacidade.",
+      consent: "Autorizo a OperumData a usar estas informações para responder sobre este projeto.",
+      required: "Obrigatório",
+      submit: "Enviar o briefing do projeto",
+      sending: "Enviando…",
+      ok: "Obrigado. Recebemos seu briefing e responderemos por e-mail.",
+      error: "Não foi possível enviar agora. Tente novamente em alguns minutos ou escreva para",
+      invalid: "Preencha os campos destacados.",
+    },
   },
   footer: {
     tagline: "Operações de campo no Brasil para dados do mundo real, robótica e Physical AI.",
@@ -499,6 +526,12 @@ const pt: SiteContent = {
     rights: "OperumData. Fase experimental.",
     social: "Siga a OperumData",
     top: "Voltar ao topo",
+    crm: "Acesso CRM",
+    portalEyebrow: "Parceiros e equipe",
+    portalTitle: "Portal de Operações para Parceiros",
+    portalText: "Acompanhe estabelecimentos, reuniões e aprovações em um só lugar.",
+    portalCta: "Entrar",
+    portalNote: "Acesso com login",
   },
 };
 
