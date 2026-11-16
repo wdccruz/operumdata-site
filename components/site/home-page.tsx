@@ -162,6 +162,11 @@ export default function HomePage({ lang }: { lang: Lang }) {
 
           <div className="site-header__actions">
             <LangSwitch lang={lang} label={t.langLabel} />
+            {CRM_URL ? (
+              <a className="btn btn--ghost btn--sm header-crm" href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
+                {t.footer.crm} ↗
+              </a>
+            ) : null}
             <a className="btn btn--primary btn--sm header-cta" href="#contact">
               {t.headerCta}
             </a>
@@ -182,6 +187,11 @@ export default function HomePage({ lang }: { lang: Lang }) {
                 <a className="mobile-nav__cta" href="#contact">
                   {t.headerCta}
                 </a>
+                {CRM_URL ? (
+                  <a href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
+                    {t.footer.crm} ↗
+                  </a>
+                ) : null}
               </nav>
             </details>
           </div>
@@ -630,7 +640,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
           </span>
           <span className="site-footer__links">
             {CRM_URL ? (
-              <a href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
+              <a className="footer-crm" href={CRM_URL} target="_blank" rel="noopener noreferrer nofollow">
                 {t.footer.crm} ↗
               </a>
             ) : null}
