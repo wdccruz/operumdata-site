@@ -1800,7 +1800,6 @@ a.lang-switch__item:focus-visible { opacity: 1; filter: none; background: rgba(2
 .site-footer__links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 20px; }
 .site-footer__bottom a.footer-crm { color: var(--accent-hot); font-size: 0.8rem; font-weight: 700; border: 1px solid var(--accent-hot); padding: 6px 12px; }
 .site-footer__bottom a.footer-crm:hover { color: var(--text); border-color: var(--text); }
-.header-crm { border-color: var(--accent-hot); color: var(--text); }
 
 /* ========================================================================== */
 /* Keyframes                                                                   */
